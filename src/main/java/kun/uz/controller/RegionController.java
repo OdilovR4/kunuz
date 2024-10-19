@@ -41,5 +41,4 @@ public class RegionController {
         return ResponseEntity.ok(regionService.getByLang(lang));
     }
 
-
 }

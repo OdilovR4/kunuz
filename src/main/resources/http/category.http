@@ -1,0 +1,26 @@
+### Create category
+POST localhost:8080/category
+Content-Type: application/json
+
+{
+  "orderNumber": 7,
+  "nameUz": "Nuqtayi nazar",
+  "nameEn": "Tourism"
+}
+
+### Update category
+PUT localhost:8080/category/3
+Content-Type: application/json
+
+{
+  "nameRu": "Спорт"
+}
+
+### Delete category
+DELETE localhost:8080/category/6
+
+### Get all categories
+GET localhost:8080/category
+
+### Get by lang
+GET localhost:8080/category/lang?lang=ru
