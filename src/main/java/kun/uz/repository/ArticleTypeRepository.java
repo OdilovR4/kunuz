@@ -11,9 +11,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public interface ArticleTypeRepository extends CrudRepository<ArticleTypeEntity,Integer>{
     @Modifying
     @Transactional
@@ -28,7 +29,8 @@ public interface ArticleTypeRepository extends CrudRepository<ArticleTypeEntity,
             "WHEN :lang = 'ru' THEN a.nameRu " +
             "WHEN :lang = 'en' THEN a.nameEn " +
             "END as name " +
-            "FROM ArticleTypeEntity a WHERE a.visible = true")
+            "FROM ArticleTypeEntity a WHERE a.visible = true "+
+            " order by a.id asc ")
     List<NameInterface> getByLang(@Param("lang") String lang);
 
 
