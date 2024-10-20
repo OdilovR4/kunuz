@@ -36,4 +36,6 @@ public interface ArticleTypeRepository extends CrudRepository<ArticleTypeEntity,
 
 
 
+
+
 }
