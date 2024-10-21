@@ -1,0 +1,41 @@
+### Create profile
+POST localhost:8080/profile
+Content-Type: application/json
+
+{
+  "name": "Gebek",
+  "surname": "Gebekov",
+  "login": "swjhsjw",
+  "password": "dn^hsjh2nds&",
+  "role": "Publisher",
+  "photo_id": 89
+
+}
+
+### get all by pagination
+GET localhost:8080/profile/all?page=1&size=6
+
+### update query
+PUT localhost:8080/profile/4
+Content-Type: application/json
+
+{
+  "name": "hkds",
+  "surname": "hdkfndkfn",
+  "photo_id": 212,
+  "password": "djkljwhf2&w",
+  "login": "dhehbcdmc",
+  "role": "dncdlm"
+}
+
+### DELETE profile
+PUT localhost:8080/profile/delete/4
+
+### Filter
+POST localhost:8080/profile/filter?page=1&size=5
+Content-Type: application/json
+
+{
+  "to": "2024-10-20"
+
+}

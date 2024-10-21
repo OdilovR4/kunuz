@@ -14,7 +14,7 @@ public interface RegionRepository extends CrudRepository<RegionEntity, Integer> 
 
     @Modifying
     @Transactional
-    @Query(value = "delete from RegionEntity where id = ?1")
+    @Query(value = "Update RegionEntity as a set a.visible = false where a.id = ?1")
     int deleteRegion(int id);
 
     @Query("From RegionEntity ")

@@ -17,8 +17,8 @@ public interface CategoryRepository extends CrudRepository<CategoryEntity, Integ
 
     @Modifying
     @Transactional
-    @Query(value = "Delete from CategoryEntity where id = :idC")
-    int deleteCategory(@Param("idC") Integer id);
+    @Query(value = "Update CategoryEntity as a set a.visible = false where a.id = ?1")
+    int deleteCategory(Integer id);
 
     @Query("From CategoryEntity order by orderNumber asc")
     List<CategoryEntity> findAllCategories();

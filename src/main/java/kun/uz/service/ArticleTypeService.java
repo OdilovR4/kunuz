@@ -35,7 +35,6 @@ public class ArticleTypeService {
         articleRepository.save(entity);
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreatedDate());
-        dto.setVisible(entity.getVisible());
         return dto;
     }
 
@@ -55,11 +54,8 @@ public class ArticleTypeService {
         if(dto.getOrderNumber()!=null){
             entity.setOrderNumber(dto.getOrderNumber());
         }
-        if(dto.getVisible()!=null){
-            entity.setVisible(dto.getVisible());
-        }
-        articleRepository.save(entity);
 
+        articleRepository.save(entity);
         return "UPDATED";
     }
 
@@ -88,7 +84,6 @@ public class ArticleTypeService {
         dto.setNameEn(entity.getNameEn());
         dto.setNameRu(entity.getNameRu());
         dto.setOrderNumber(entity.getOrderNumber());
-        dto.setVisible(entity.getVisible());
         dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }

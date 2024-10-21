@@ -30,16 +30,12 @@ public class CategoryService {
         categoryRepository.save(entity);
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreatedDate());
-        dto.setVisible(entity.getVisible());
         return dto;
     }
 
     public String updateCategory(Integer id, CategoryDTO dto) {
         CategoryEntity entity = categoryRepository.findById(id).orElseThrow(
                 ()-> new ResourceNotFoundException("Not found"));
-        if(dto.getVisible()!=null){
-            entity.setVisible(dto.getVisible());
-        }
         if(dto.getOrderNumber()!=null){
             entity.setOrderNumber(dto.getOrderNumber());
         }
@@ -87,10 +83,8 @@ public class CategoryService {
         dto.setNameEn(entity.getNameEn());
         dto.setNameRu(entity.getNameRu());
         dto.setNameUz(entity.getNameUz());
-        dto.setVisible(entity.getVisible());
         dto.setOrderNumber(entity.getOrderNumber());
         dto.setCreatedDate(entity.getCreatedDate());
-
         return dto;
     }
 }

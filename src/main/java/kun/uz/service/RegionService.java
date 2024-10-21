@@ -29,7 +29,6 @@ public class RegionService {
         regionRepository.save(entity);
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreatedDate());
-        dto.setVisible(entity.getVisible());
 
         return dto;
     }
@@ -48,9 +47,6 @@ public class RegionService {
         }
         if(dto.getNameUz() != null) {
             entity.setNameUz(dto.getNameUz());
-        }
-        if(dto.getVisible() != null) {
-            entity.setVisible(dto.getVisible());
         }
          regionRepository.save(entity);
 
@@ -97,7 +93,6 @@ public class RegionService {
         dto.setNameEn(e.getNameEn());
         dto.setNameRu(e.getNameRu());
         dto.setNameUz(e.getNameUz());
-        dto.setVisible(e.getVisible());
         dto.setCreatedDate(e.getCreatedDate());
         return dto;
     }

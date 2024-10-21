@@ -18,7 +18,7 @@ import java.util.List;
 public interface ArticleTypeRepository extends CrudRepository<ArticleTypeEntity,Integer>{
     @Modifying
     @Transactional
-    @Query(value = "delete From ArticleTypeEntity a where a.id = ?1")
+    @Query(value = "Update ArticleTypeEntity as a set a.visible = false where a.id = ?1")
     int deleteArticleType(Integer id);
 
     @Query(value = "From ArticleTypeEntity order by createdDate asc")

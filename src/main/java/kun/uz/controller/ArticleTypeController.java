@@ -1,5 +1,6 @@
 package kun.uz.controller;
 
+import jakarta.validation.Valid;
 import kun.uz.dto.ArticleTypeDTO;
 import kun.uz.dto.NameInterface;
 import kun.uz.service.ArticleTypeService;
@@ -17,7 +18,7 @@ public class ArticleTypeController {
     private ArticleTypeService articleTypeService;
 
     @PostMapping("")
-    public ResponseEntity<?> create(@RequestBody ArticleTypeDTO dto){
+    public ResponseEntity<?> create(@Valid @RequestBody ArticleTypeDTO dto){
      return ResponseEntity.ok(articleTypeService.create(dto));
     }
 
@@ -36,10 +37,17 @@ public class ArticleTypeController {
         return ResponseEntity.ok(articleTypeService.getAll((page-1),size));
     }
 
-    @GetMapping("/lang")
+  /*  @GetMapping("/lang")
     public ResponseEntity<List<NameInterface>> getAll(@RequestParam String lang){
         return ResponseEntity.ok(articleTypeService.getByLang(lang));
+    }*/
+
+    @GetMapping("/get-by-lang")
+    public ResponseEntity<List<NameInterface>> getByLang(@RequestHeader(value = "Accept-language",
+            defaultValue = "uz") String language) {
+        return ResponseEntity.ok(articleTypeService.getByLang(language));
     }
+
 
 
 }
