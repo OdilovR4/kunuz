@@ -32,17 +32,15 @@ public class ProfileService {
     public ProfileDTO create(ProfileDTO dto) {
         ProfileEntity entity = new ProfileEntity();
         entity.setName(dto.getName());
-        entity.setLogin(dto.getLogin());
+        entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
         entity.setCreatedDate(LocalDateTime.now());
         entity.setRole(dto.getRole());
         entity.setStatus(ProfileStatus.ACTIVE);
         entity.setSurname(dto.getSurname());
-        entity.setPhoto_id(dto.getPhoto_id());
+        entity.setPhotoId(dto.getPhotoId());
         entity.setVisible(true);
         profileRepository.save(entity);
-        dto.setId(entity.getId());
-        dto.setCreated_date(entity.getCreatedDate());
         return dto;
     }
 
@@ -50,11 +48,11 @@ public class ProfileService {
     public boolean update(Integer id, @Valid ProfileDTO profile) {
         ProfileEntity entity = getById(id);
         entity.setName(profile.getName());
-        entity.setLogin(profile.getLogin());
+        entity.setEmail(profile.getEmail());
         entity.setPassword(profile.getPassword());
         entity.setRole(profile.getRole());
         entity.setSurname(profile.getSurname());
-        entity.setPhoto_id(profile.getPhoto_id());
+        entity.setPhotoId(profile.getPhotoId());
         profileRepository.save(entity);
         return true;
     }
@@ -76,14 +74,12 @@ public class ProfileService {
 
     public ProfileDTO changeToDto(ProfileEntity entity) {
         ProfileDTO dto = new ProfileDTO();
-        dto.setId(entity.getId());
         dto.setName(entity.getName());
-        dto.setLogin(entity.getLogin());
+        dto.setEmail(entity.getEmail());
         dto.setPassword(entity.getPassword());
         dto.setRole(entity.getRole());
         dto.setSurname(entity.getSurname());
-        dto.setPhoto_id(entity.getPhoto_id());
-        dto.setCreated_date(entity.getCreatedDate());
+        dto.setPhotoId(entity.getPhotoId());
         return dto;
     }
 

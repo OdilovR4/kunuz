@@ -11,6 +11,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Repository
 public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer>,
@@ -27,4 +30,7 @@ public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer
     @Transactional
     @Query("update ProfileEntity set visible = false where id = ?1")
     int deleteProfile(Integer id);
+
+    @Query(value = "From ProfileEntity where id = ?1 and visible = true")
+    ProfileEntity findByIdAndVisibleTrue(Integer id);
 }

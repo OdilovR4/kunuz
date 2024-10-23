@@ -1,7 +1,7 @@
 package kun.uz.entity;
 
 import jakarta.persistence.*;
-import jdk.jfr.BooleanFlag;
+import kun.uz.enums.ProfileRole;
 import kun.uz.enums.ProfileStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,20 +20,27 @@ public class ProfileEntity {
     String name;
     @Column(name = "surname")
     String surname;
-    @Column(name = "login")
-    String login;
+    @Column(name = "email")
+    String email;
     @Column(name = "password")
     String password;
+
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    String role;
+    ProfileRole role;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     ProfileStatus status;
+
     @Column(name = "visible")
     Boolean visible;
+
     @Column(name = "created_date")
     LocalDateTime createdDate;
+
     @Column(name = "photo_id")
-    Integer photo_id;
+    Integer photoId;
 
 }
