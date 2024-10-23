@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+
 @Service
 public class AuthService {
     @Autowired
@@ -17,17 +19,19 @@ public class AuthService {
     @Autowired
     EmailSendingService emailSendingService;
 
-    public String registration(RegistrationDTO dto){
+    public String registration(RegistrationDTO dto) {
         //check email
+        ProfileEntity emailEntity = profileRepository.getByEmailAndVisibleTrue(dto.getEmail());
+        if(emailEntity != null) {
+                return "This email already exist";
+        }
         ProfileEntity entity = new ProfileEntity();
         entity.setEmail(dto.getEmail());
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
         entity.setPassword(MD5Util.md5(dto.getPassword()));
         entity.setStatus(ProfileStatus.IN_REGISTRATION);
-        entity.setVisible(Boolean.TRUE);
         entity.setCreatedDate(LocalDateTime.now());
-        entity.setRole(ProfileRole.ROLE_USER);
         profileRepository.save(entity);
 
         String emailContent = "<html><body>" +
@@ -35,24 +39,28 @@ public class AuthService {
                 "<a href=\"http://localhost:8080/auth/registration/confirm/" + entity.getId() + "\" " +
                 "style=\"display: inline-block; padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; border: 1px solid #007bff;\">Confirm</a>" +
                 "</body></html>";
-
-
         emailSendingService.sendSimpleMessage(dto.getEmail(), "Futbol", emailContent);
+        entity.setVisible(Boolean.TRUE);
+        entity.setRole(ProfileRole.ROLE_USER);
         return "Mail was sent";
 
 
     }
 
-    public String registrationConfirm(Integer id){
+    public String registrationConfirm(Integer id, LocalDateTime clickTime){
         ProfileEntity entity = profileRepository.findByIdAndVisibleTrue(id);
-        if(entity == null){
-            return "Not completed";
-        }
         if(entity.getStatus()!= ProfileStatus.IN_REGISTRATION){
-            return "Not completed";
+            return "Your status is not in registration";
         }
+
+        LocalDateTime registeredDate = entity.getCreatedDate();
+        if(clickTime.minusSeconds(50).isAfter(registeredDate)){
+            return "Time was over to confirm your registration";
+        }
+
         entity.setStatus(ProfileStatus.ACTIVE);
         profileRepository.save(entity);
+
         return "Registration completed";
 
     }

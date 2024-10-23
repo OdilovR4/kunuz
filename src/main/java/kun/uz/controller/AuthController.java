@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -20,7 +22,7 @@ public class AuthController {
 
     @GetMapping("/registration/confirm/{id}")
     public ResponseEntity<String> registrationConfirm (@PathVariable Integer id){
-        return ResponseEntity.ok(authService.registrationConfirm(id));
+        return ResponseEntity.ok(authService.registrationConfirm(id,LocalDateTime.now()));
     }
 
 

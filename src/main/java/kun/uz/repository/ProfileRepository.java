@@ -1,6 +1,8 @@
 package kun.uz.repository;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import kun.uz.entity.ProfileEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,4 +35,7 @@ public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer
 
     @Query(value = "From ProfileEntity where id = ?1 and visible = true")
     ProfileEntity findByIdAndVisibleTrue(Integer id);
+
+
+    ProfileEntity getByEmailAndVisibleTrue(String email);
 }
