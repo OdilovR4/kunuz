@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,9 +34,13 @@ public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer
     @Query("update ProfileEntity set visible = false where id = ?1")
     int deleteProfile(Integer id);
 
-    @Query(value = "From ProfileEntity where id = ?1 and visible = true")
-    ProfileEntity findByIdAndVisibleTrue(Integer id);
 
-
+    @Query("FROM ProfileEntity p WHERE p.email = ?1 AND (p.visible = true OR p.status = 'IN_REGISTRATION')")
     ProfileEntity getByEmailAndVisibleTrue(String email);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE ProfileEntity p SET p.status = :#{#entity.status}, p.visible = :#{#entity.visible}, p.role = :#{#entity.role} WHERE p.id = :#{#entity.id}")
+    void updateSome(@Param("entity") ProfileEntity entity);
+
 }
