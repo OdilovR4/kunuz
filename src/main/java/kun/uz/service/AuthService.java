@@ -1,5 +1,6 @@
 package kun.uz.service;
 
+import kun.uz.dto.EmailHistoryDTO;
 import kun.uz.dto.RegistrationDTO;
 import kun.uz.entity.ProfileEntity;
 import kun.uz.enums.ProfileRole;
@@ -14,10 +15,13 @@ import java.time.LocalDateTime;
 @Service
 public class AuthService {
     @Autowired
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
     @Autowired
-    EmailSendingService emailSendingService;
-    LocalDateTime requestTime;
+    private EmailSendingService emailSendingService;
+    private LocalDateTime requestTime;
+    @Autowired
+    private EmailHistoryService emailHistoryService;
+
 
     public String registration(RegistrationDTO dto) {
         ProfileEntity emailEntity = profileRepository.getByEmailAndVisibleTrue(dto.getEmail());
@@ -48,8 +52,11 @@ public class AuthService {
                 "<a href=\"http://localhost:8080/auth/registration/confirm/" + id + "\" " +
                 "style=\"display: inline-block; padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; border: 1px solid #007bff;\">Confirm</a>" +
                 "</body></html>";
-        emailSendingService.sendSimpleMessage(email, "Kecha BARCA yorvordiyu", emailContent);
+        String title = "Kecha barca yordiku jigarr";
+        // xozircha title ni yuborib turamiz chunki bizda contentnimiz url va button ostida
+        emailSendingService.sendSimpleMessage(email, title, emailContent);
         requestTime = LocalDateTime.now();
+        emailHistoryDto(email,title,requestTime);
         return "Mail was sent";
 
     }
@@ -70,6 +77,14 @@ public class AuthService {
 
         return "Registration completed";
 
+    }
+
+    public void emailHistoryDto(String email, String content, LocalDateTime localDateTime){
+        EmailHistoryDTO emailHistoryDTO = new EmailHistoryDTO();
+        emailHistoryDTO.setMessage(content);
+        emailHistoryDTO.setEmail(email);
+        emailHistoryDTO.setCreatedDate(localDateTime);
+        emailHistoryService.addEmailHistory(emailHistoryDTO);
     }
 
 

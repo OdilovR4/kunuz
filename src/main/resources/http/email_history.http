@@ -1,0 +1,8 @@
+### GET HISTORY OF EMAIL
+GET localhost:8080/email-history/email?email=odilovrahmatullo4@gmail.com
+
+### GET HISTORY OF GIVEN DATE
+GET localhost:8080/email-history/date?date=2024-10-24
+
+### GET HISTORY BY PAGINATION
+GET localhost:8080/email-history/pagination?page=1&size=3
