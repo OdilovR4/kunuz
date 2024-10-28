@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import kun.uz.dto.FilterDTO;
 import kun.uz.dto.ProfileDTO;
 import kun.uz.service.ProfileService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

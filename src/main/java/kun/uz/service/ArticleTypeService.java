@@ -1,6 +1,5 @@
 package kun.uz.service;
 
-import jakarta.annotation.Resource;
 import kun.uz.dto.ArticleTypeDTO;
 import kun.uz.dto.NameInterface;
 import kun.uz.entity.ArticleTypeEntity;
@@ -11,11 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

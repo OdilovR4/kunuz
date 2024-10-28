@@ -5,13 +5,8 @@ import jakarta.persistence.Query;
 import kun.uz.dto.FilterDTO;
 import kun.uz.dto.FilterResultDTO;
 import kun.uz.entity.ProfileEntity;
-import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import javax.swing.text.html.parser.Entity;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;

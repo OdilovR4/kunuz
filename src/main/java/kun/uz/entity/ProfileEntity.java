@@ -20,8 +20,8 @@ public class ProfileEntity {
     String name;
     @Column(name = "surname")
     String surname;
-    @Column(name = "email")
-    String email;
+    @Column(name = "username")
+    String username;
     @Column(name = "password")
     String password;
 

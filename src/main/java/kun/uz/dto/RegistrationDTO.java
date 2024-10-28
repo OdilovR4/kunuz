@@ -17,9 +17,9 @@ import lombok.Setter;
     @Pattern(regexp = "^[a-zA-ZА-Яа-яЁёЎўҚқҒғҲҳ]+$", message = "surname must consist of only letters")
     @Size(min = 3, max = 15, message = "the length of surname must be between 3 and 15")
     String surname;
-    @NotBlank(message = "login may be phone number or email is required")
+    @NotBlank(message = "username may be phone number or email is required")
     @Size(min = 6, max = 15, message = "the length of login must be between 6 and 20")
-    String email;
+    String username;
     @NotBlank(message = "password is required ")
     @Size(min = 8, max = 15, message = "the length of password must be between 8 and 20")
     @Pattern(
@@ -28,5 +28,3 @@ import lombok.Setter;
     )
     String password;
     }
-
-

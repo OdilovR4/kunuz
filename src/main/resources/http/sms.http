@@ -1,0 +1,22 @@
+POST notify.eskiz.uz/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "odilovrahmatullo5822@gmail.com",
+  "password": "IjQw04tzdd9tbnQBu93O0DsGT5fXB9usUJ0virjB"
+}
+
+### eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzI0MzE3MDAsImlhdCI6MTcyOTgzOTcwMCwicm9sZSI6InRlc3QiLCJzaWduIjoiOWIzZWJjYWRjMThjZTJmNGU1Y2NhY2VjYjE4NzgyNGQxNGVlMmJmMjMzZjg2MmIzMTUzODM5MDAxMTZiMWNjZCIsInN1YiI6Ijg3NzgifQ.6F4hme-L-dYftr2mj5f-FQ2JLE8sb7rRuqLGlQwgYEw
+
+### SEND SMS
+POST notify.eskiz.uz/api/message/sms/send
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MzI0MzE3MDAsImlhdCI6MTcyOTgzOTcwMCwicm9sZSI6InRlc3QiLCJzaWduIjoiOWIzZWJjYWRjMThjZTJmNGU1Y2NhY2VjYjE4NzgyNGQxNGVlMmJmMjMzZjg2MmIzMTUzODM5MDAxMTZiMWNjZCIsInN1YiI6Ijg3NzgifQ.6F4hme-L-dYftr2mj5f-FQ2JLE8sb7rRuqLGlQwgYEw
+
+{
+  "mobile_phone":"998942025822",
+  "message": "This is test from Eskiz",
+  "from": 4546
+}
+
+

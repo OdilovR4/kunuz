@@ -1,6 +1,7 @@
 package kun.uz.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import kun.uz.enums.ProfileRole;
@@ -8,7 +9,6 @@ import kun.uz.enums.ProfileStatus;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -33,10 +33,10 @@ public class ProfileDTO {
    )
    String password;
 
-   @NotBlank(message = "status is required")
+   @NotNull(message = "status is required")
    ProfileStatus status;
 
-   @NotBlank(message = "role is required")
+   @NotNull(message = "role is required")
    ProfileRole role;
 
    Integer photoId;
