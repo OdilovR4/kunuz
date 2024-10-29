@@ -1,14 +1,16 @@
 package kun.uz.service;
 
 import jakarta.validation.Valid;
-import kun.uz.dto.FilterDTO;
-import kun.uz.dto.FilterResultDTO;
-import kun.uz.dto.ProfileDTO;
+import kun.uz.dto.*;
 import kun.uz.entity.ProfileEntity;
+import kun.uz.enums.ProfileRole;
 import kun.uz.enums.ProfileStatus;
+import kun.uz.exceptions.AppBadRequestException;
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.CustomProfileRepository;
 import kun.uz.repository.ProfileRepository;
+import kun.uz.util.JwtUtil;
+import kun.uz.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,26 +31,45 @@ public class ProfileService {
     @Autowired
     CustomProfileRepository profileCustomRepository;
 
-    public ProfileDTO create(ProfileDTO dto) {
-        ProfileEntity entity = new ProfileEntity();
-        entity.setName(dto.getName());
-        entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getPassword());
-        entity.setCreatedDate(LocalDateTime.now());
-        entity.setRole(dto.getRole());
-        entity.setStatus(ProfileStatus.ACTIVE);
-        entity.setSurname(dto.getSurname());
-        entity.setPhotoId(dto.getPhotoId());
-        entity.setVisible(true);
-        profileRepository.save(entity);
-        return dto;
+    public ProfileDTO create(ProfileCreationDTO dto, String jwtToken) {
+        ProfileEntity entity = profileRepository.getByUsername(dto.getUsername());
+        if(entity != null) {
+         throw new ResourceNotFoundException("Profile already exist");
+        }
+        jwtValidator(jwtToken);
+        ProfileEntity profile = new ProfileEntity();
+        profile.setUsername(dto.getUsername());
+        profile.setPassword(dto.getPassword());
+        profile.setName(dto.getName());
+        profile.setSurname(dto.getSurname());
+        profile.setPassword(MD5Util.md5(dto.getPassword()));
+        profile.setStatus(ProfileStatus.ACTIVE);
+        profile.setVisible(Boolean.TRUE);
+        profile.setRole(dto.getRole());
+        profile.setCreatedDate(LocalDateTime.now());
+        profileRepository.save(profile);
+
+        return changeToDto(profile);
+
+
     }
+
+    private void jwtValidator(String jwtToken) {
+        JwtDTO dto = JwtUtil.decode(jwtToken);
+        if(dto.getUsername()==null || dto.getRole() == null) {
+            throw new AppBadRequestException("Invalid JWT to create profile");
+        }
+        if(!dto.getRole().equals(ProfileRole.ROLE_ADMIN.name())){
+            throw new AppBadRequestException("Invalid role to create profile");
+        }
+    }
+
 
 
     public boolean update(Integer id, @Valid ProfileDTO profile) {
         ProfileEntity entity = getById(id);
         entity.setName(profile.getName());
-        entity.setEmail(profile.getEmail());
+        entity.setUsername(profile.getUsername());
         entity.setPassword(profile.getPassword());
         entity.setRole(profile.getRole());
         entity.setSurname(profile.getSurname());
@@ -75,11 +96,14 @@ public class ProfileService {
     public ProfileDTO changeToDto(ProfileEntity entity) {
         ProfileDTO dto = new ProfileDTO();
         dto.setName(entity.getName());
-        dto.setEmail(entity.getEmail());
+        dto.setUsername(entity.getUsername());
         dto.setPassword(entity.getPassword());
         dto.setRole(entity.getRole());
         dto.setSurname(entity.getSurname());
         dto.setPhotoId(entity.getPhotoId());
+        dto.setStatus(entity.getStatus());
+        dto.setCreatedDate(entity.getCreatedDate());
+
         return dto;
     }
 

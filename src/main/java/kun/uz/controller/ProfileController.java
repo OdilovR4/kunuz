@@ -1,10 +1,12 @@
 package kun.uz.controller;
 
 import jakarta.validation.Valid;
+import kun.uz.dto.AuthDTO;
 import kun.uz.dto.FilterDTO;
+import kun.uz.dto.ProfileCreationDTO;
 import kun.uz.dto.ProfileDTO;
+import kun.uz.service.AuthService;
 import kun.uz.service.ProfileService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +14,19 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("profile")
+@RequestMapping("/profile")
 public class ProfileController {
     @Autowired
     ProfileService profileService;
+    @Autowired
+    AuthService authService;
 
     @PostMapping
-    public ResponseEntity<?> createProfile(@Valid @RequestBody ProfileDTO profile) {
-        return ResponseEntity.ok(profileService.create(profile));
+    public ResponseEntity<ProfileDTO> createProfile(@Valid @RequestBody ProfileCreationDTO dto,
+                                                    @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(profileService.create(dto, token));
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProfile(@PathVariable Integer id, @Valid @RequestBody ProfileDTO profile) {

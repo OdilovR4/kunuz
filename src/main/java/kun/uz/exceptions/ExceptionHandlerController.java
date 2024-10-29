@@ -1,7 +1,6 @@
 package kun.uz.exceptions;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -34,15 +33,8 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     }
 
-
-    // Barcha boshqa exceptionlarni ushlaydigan umumiy handler
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", new Date());
-        body.put("message", ex.getMessage());
-
-        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
-
+    @ExceptionHandler({IllegalArgumentException.class ,AppBadRequestException.class, ResourceNotFoundException.class})
+    public ResponseEntity<String> illegalArgument(RuntimeException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

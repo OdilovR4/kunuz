@@ -1,10 +1,8 @@
 package kun.uz.repository;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.transaction.Transactional;
 import kun.uz.dto.NameInterface;
 import kun.uz.entity.ArticleTypeEntity;
-import org.apache.catalina.LifecycleState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;

@@ -1,13 +1,11 @@
 package kun.uz.service;
 
 import kun.uz.dto.CategoryDTO;
-import kun.uz.dto.NameInterface;
 import kun.uz.dto.NameOrder;
 import kun.uz.entity.CategoryEntity;
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

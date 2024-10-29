@@ -21,6 +21,12 @@ public interface EmailHistoryRepository extends CrudRepository<EmailHistoryEntit
 
 
     @Query("from EmailHistoryEntity order by createdDate desc ")
-    Page<EmailHistoryEntity> getByPagination(Pageable pageable)
-            ;
+    Page<EmailHistoryEntity> getByPagination(Pageable pageable);
+
+
+    @Query("Select count(e) from EmailHistoryEntity e where e.email = ?1 and e.createdDate between ?2 and ?3")
+    Long getEmailCount(String to, LocalDateTime localDateTime, LocalDateTime now);
+
+    @Query("from EmailHistoryEntity where email = ?1 order by createdDate desc")
+    List<EmailHistoryEntity> getLastSentEmail(String email);
 }
