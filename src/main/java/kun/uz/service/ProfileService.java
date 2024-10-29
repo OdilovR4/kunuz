@@ -54,7 +54,7 @@ public class ProfileService {
 
     }
 
-    private void jwtValidator(String jwtToken) {
+    public static void jwtValidator(String jwtToken) {
         JwtDTO dto = JwtUtil.decode(jwtToken);
         if (dto.getUsername() == null || dto.getRole() == null) {
             throw new AppBadRequestException("Invalid JWT to do smth ");

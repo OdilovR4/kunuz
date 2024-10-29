@@ -21,7 +21,8 @@ public class ArticleTypeService {
     @Autowired
     ArticleTypeRepository articleRepository;
 
-    public ArticleTypeDTO create(ArticleTypeDTO dto) {
+    public ArticleTypeDTO create(ArticleTypeDTO dto, String token) {
+        ProfileService.jwtValidator(token);
         ArticleTypeEntity entity = new ArticleTypeEntity();
         entity.setOrderNumber(dto.getOrderNumber());
         entity.setNameUz(dto.getNameUz());
@@ -35,7 +36,8 @@ public class ArticleTypeService {
         return dto;
     }
 
-    public String update(Integer id, ArticleTypeDTO dto) {
+    public String update(Integer id, ArticleTypeDTO dto, String token) {
+        ProfileService.jwtValidator(token);
         ArticleTypeEntity entity = articleRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("Post Not Found"));
 
@@ -56,14 +58,16 @@ public class ArticleTypeService {
         return "UPDATED";
     }
 
-    public String delete(Integer id) {
+    public String delete(Integer id, String token) {
+        ProfileService.jwtValidator(token);
         if(articleRepository.deleteArticleType(id)==1){
             return "DELETED";
         }
-        return new ResourceNotFoundException("Post Not Found").toString();
+        throw new  ResourceNotFoundException("Post Not Found");
     }
 
-    public PageImpl<ArticleTypeDTO> getAll(int page, int size) {
+    public PageImpl<ArticleTypeDTO> getAll(int page, int size, String token) {
+        ProfileService.jwtValidator(token);
 //        PageRequest pageRequest = PageRequest.of(page, size);
 //        Page<ArticleTypeEntity> pageEntity = articleRepository.getAll(pageRequest);
 //        List<ArticleTypeDTO> pageDTO = changeToDTOList(articleRepository.getAll(pageRequest).getContent());

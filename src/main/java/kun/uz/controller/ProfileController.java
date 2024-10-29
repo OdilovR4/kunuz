@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
     @Autowired
     ProfileService profileService;
-    @Autowired
-    AuthService authService;
+
+
 
     @PostMapping
     public ResponseEntity<ProfileDTO> createProfile(@Valid @RequestBody ProfileCreationDTO dto,
@@ -56,6 +56,6 @@ public class ProfileController {
                                                    @RequestBody FilterDTO dto) {
         page = Math.max(0,page-1);
         return ResponseEntity.ok(profileService.filter((page),size,dto));
-
+        
     }
 }

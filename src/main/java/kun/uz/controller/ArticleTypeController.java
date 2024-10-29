@@ -18,23 +18,30 @@ public class ArticleTypeController {
     private ArticleTypeService articleTypeService;
 
     @PostMapping("")
-    public ResponseEntity<?> create(@Valid @RequestBody ArticleTypeDTO dto){
-     return ResponseEntity.ok(articleTypeService.create(dto));
+    public ResponseEntity<?> create(@Valid @RequestBody ArticleTypeDTO dto,
+                                    @RequestHeader("Authorization") String token){
+     return ResponseEntity.ok(articleTypeService.create(dto, token));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody ArticleTypeDTO dto){
-        return ResponseEntity.ok(articleTypeService.update(id,dto));
+    public ResponseEntity<?> update(@PathVariable Integer id,
+                                    @RequestBody ArticleTypeDTO dto,
+                                    @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(articleTypeService.update(id,dto, token));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable Integer id){
-        return ResponseEntity.ok(articleTypeService.delete(id));
+    public ResponseEntity<String> delete(@PathVariable Integer id,
+                                         @RequestHeader("Authorization") String token){
+        return ResponseEntity.ok(articleTypeService.delete(id, token));
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<ArticleTypeDTO>> getAll(@RequestParam Integer page, @RequestParam Integer size){
-        return ResponseEntity.ok(articleTypeService.getAll((page-1),size));
+    public ResponseEntity<Page<ArticleTypeDTO>> getAll(@RequestParam Integer page,
+                                                       @RequestParam Integer size,
+                                                       @RequestHeader("Authorization") String token){
+        page = Math.max(0,page-1);
+        return ResponseEntity.ok(articleTypeService.getAll(page,size,token));
     }
 
   /*  @GetMapping("/lang")
