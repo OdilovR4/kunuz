@@ -3,9 +3,12 @@ package kun.uz.service;
 import jakarta.validation.Valid;
 import kun.uz.dto.*;
 import kun.uz.entity.ProfileEntity;
+<<<<<<< HEAD
 import kun.uz.enums.ProfileRole;
 import kun.uz.enums.ProfileStatus;
 import kun.uz.exceptions.AppBadRequestException;
+=======
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.CustomProfileRepository;
 import kun.uz.repository.ProfileRepository;
@@ -18,7 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,13 @@ public class ProfileService {
 
     @Autowired
     CustomProfileRepository profileCustomRepository;
+    @Autowired
+    ProfileEmailService profileEmailService;
+    @Autowired
+    ProfileNumberService profileNumberService;
 
+
+<<<<<<< HEAD
     public ProfileDTO create(ProfileCreationDTO dto, String jwtToken) {
         ProfileEntity entity = profileRepository.getByUsername(dto.getUsername());
         if(entity != null) {
@@ -65,11 +73,27 @@ public class ProfileService {
     }
 
 
+=======
+    public ProfileDTO create(ProfileDTO dto) {
+        if(dto.getEmail().endsWith("@gmail.com")) {
+            profileEmailService.createByEmail(dto);
+        }
+        else{
+            profileNumberService.createByPhone(dto);
+        }
+        return dto;
+    }
+ 
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
 
     public boolean update(Integer id, @Valid ProfileDTO profile) {
         ProfileEntity entity = getById(id);
         entity.setName(profile.getName());
+<<<<<<< HEAD
         entity.setUsername(profile.getUsername());
+=======
+        entity.setUsername(profile.getEmail());
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
         entity.setPassword(profile.getPassword());
         entity.setRole(profile.getRole());
         entity.setSurname(profile.getSurname());
@@ -96,7 +120,11 @@ public class ProfileService {
     public ProfileDTO changeToDto(ProfileEntity entity) {
         ProfileDTO dto = new ProfileDTO();
         dto.setName(entity.getName());
+<<<<<<< HEAD
         dto.setUsername(entity.getUsername());
+=======
+        dto.setEmail(entity.getUsername());
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
         dto.setPassword(entity.getPassword());
         dto.setRole(entity.getRole());
         dto.setSurname(entity.getSurname());

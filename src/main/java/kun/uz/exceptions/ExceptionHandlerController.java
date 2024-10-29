@@ -33,7 +33,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
     }
 
+<<<<<<< HEAD
     @ExceptionHandler({IllegalArgumentException.class ,AppBadRequestException.class, ResourceNotFoundException.class})
+=======
+    @ExceptionHandler({IllegalArgumentException.class ,AppBadRequestException.class})
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
     public ResponseEntity<String> illegalArgument(RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }

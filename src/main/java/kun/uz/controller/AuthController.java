@@ -32,13 +32,19 @@ public class AuthController {
     public ResponseEntity<String> registrationSmsConfirm (@RequestBody SmsConfirmDTO dto){
         return ResponseEntity.ok(authService.smsConfirm(dto,LocalDateTime.now()));
 
+<<<<<<< HEAD
     }
     @PostMapping("/login")
     public ResponseEntity<ProfileDTO> login(@RequestBody  @Valid AuthDTO dto){
         return ResponseEntity.ok(authService.login(dto));
+=======
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
     }
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
 }

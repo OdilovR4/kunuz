@@ -1,15 +1,21 @@
 package kun.uz.service;
 
+<<<<<<< HEAD
 import kun.uz.dto.AuthDTO;
 import kun.uz.dto.ProfileDTO;
+=======
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
 import kun.uz.dto.RegistrationDTO;
 import kun.uz.dto.SmsConfirmDTO;
 import kun.uz.entity.ProfileEntity;
 import kun.uz.enums.ProfileStatus;
 import kun.uz.exceptions.AppBadRequestException;
 import kun.uz.repository.ProfileRepository;
+<<<<<<< HEAD
 import kun.uz.util.JwtUtil;
 import kun.uz.util.MD5Util;
+=======
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +64,7 @@ public class AuthService {
 
     public String smsConfirm(SmsConfirmDTO dto, LocalDateTime clickTime) {
         return smsService.smsConfirm(dto, clickTime);
+<<<<<<< HEAD
         // 1. findByPhone()
         // 2. check IN_REGISTRATION
 
@@ -86,6 +93,17 @@ public class AuthService {
         profileDTO.setUsername(entity.getUsername());
         profileDTO.setSurname(entity.getSurname());
         profileDTO.setJwtToken(JwtUtil.encode(entity.getUsername(),entity.getRole().toString()));
+=======
+
+        // 1. findByPhone()
+        // 2. check IN_REGISTRATION
+
+        // check()
+        // 3. check code is correct
+        // 4. sms expiredTime
+        // 5. attempt count  (10,000 - 99,999)
+        // change status and update
+>>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
 
         return profileDTO;
     }
