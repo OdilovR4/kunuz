@@ -1,6 +1,5 @@
 package kun.uz.util;
 
-import java.security.PublicKey;
 import java.util.Random;
 
 public class RandomUtil {

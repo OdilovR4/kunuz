@@ -3,12 +3,9 @@ package kun.uz.service;
 import jakarta.validation.Valid;
 import kun.uz.dto.*;
 import kun.uz.entity.ProfileEntity;
-<<<<<<< HEAD
 import kun.uz.enums.ProfileRole;
 import kun.uz.enums.ProfileStatus;
 import kun.uz.exceptions.AppBadRequestException;
-=======
->>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.CustomProfileRepository;
 import kun.uz.repository.ProfileRepository;
@@ -21,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,17 +30,11 @@ public class ProfileService {
 
     @Autowired
     CustomProfileRepository profileCustomRepository;
-    @Autowired
-    ProfileEmailService profileEmailService;
-    @Autowired
-    ProfileNumberService profileNumberService;
 
-
-<<<<<<< HEAD
     public ProfileDTO create(ProfileCreationDTO dto, String jwtToken) {
         ProfileEntity entity = profileRepository.getByUsername(dto.getUsername());
-        if(entity != null) {
-         throw new ResourceNotFoundException("Profile already exist");
+        if (entity != null) {
+            throw new ResourceNotFoundException("Profile already exist");
         }
         jwtValidator(jwtToken);
         ProfileEntity profile = new ProfileEntity();
@@ -64,40 +56,22 @@ public class ProfileService {
 
     private void jwtValidator(String jwtToken) {
         JwtDTO dto = JwtUtil.decode(jwtToken);
-        if(dto.getUsername()==null || dto.getRole() == null) {
-            throw new AppBadRequestException("Invalid JWT to create profile");
+        if (dto.getUsername() == null || dto.getRole() == null) {
+            throw new AppBadRequestException("Invalid JWT to do smth ");
         }
-        if(!dto.getRole().equals(ProfileRole.ROLE_ADMIN.name())){
-            throw new AppBadRequestException("Invalid role to create profile");
+        if (!dto.getRole().equals(ProfileRole.ROLE_ADMIN.name())) {
+            throw new AppBadRequestException("Invalid role to do smth");
         }
     }
 
-
-=======
-    public ProfileDTO create(ProfileDTO dto) {
-        if(dto.getEmail().endsWith("@gmail.com")) {
-            profileEmailService.createByEmail(dto);
-        }
-        else{
-            profileNumberService.createByPhone(dto);
-        }
-        return dto;
-    }
- 
->>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
-
-    public boolean update(Integer id, @Valid ProfileDTO profile) {
+    public boolean updateByAdmin(Integer id, @Valid ProfileCreationDTO profile, String jwtToken) {
+        jwtValidator(jwtToken);
         ProfileEntity entity = getById(id);
         entity.setName(profile.getName());
-<<<<<<< HEAD
         entity.setUsername(profile.getUsername());
-=======
-        entity.setUsername(profile.getEmail());
->>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
+        entity.setSurname(profile.getSurname());
         entity.setPassword(profile.getPassword());
         entity.setRole(profile.getRole());
-        entity.setSurname(profile.getSurname());
-        entity.setPhotoId(profile.getPhotoId());
         profileRepository.save(entity);
         return true;
     }
@@ -119,12 +93,9 @@ public class ProfileService {
 
     public ProfileDTO changeToDto(ProfileEntity entity) {
         ProfileDTO dto = new ProfileDTO();
-        dto.setName(entity.getName());
-<<<<<<< HEAD
         dto.setUsername(entity.getUsername());
-=======
-        dto.setEmail(entity.getUsername());
->>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
+        dto.setName(entity.getName());
+        dto.setUsername(entity.getUsername());
         dto.setPassword(entity.getPassword());
         dto.setRole(entity.getRole());
         dto.setSurname(entity.getSurname());
@@ -136,11 +107,10 @@ public class ProfileService {
     }
 
     public Boolean delete(Integer id) {
-
         return (profileRepository.deleteProfile(id) > 0);
     }
 
-    public Page<ProfileDTO> filter(int page, Integer size, FilterDTO dto){
+    public Page<ProfileDTO> filter(int page, Integer size, FilterDTO dto) {
         FilterResultDTO<ProfileEntity> result = profileCustomRepository.filter(page, size, dto);
         List<ProfileDTO> dtoList = new ArrayList<>();
         for (ProfileEntity entity : result.getContents()) {
@@ -149,4 +119,18 @@ public class ProfileService {
         return new PageImpl<>(dtoList, PageRequest.of(page, size), result.getTotal());
     }
 
+    public Boolean updateByOwn(Integer id, @Valid ProfileCreationDTO dto) {
+        ProfileEntity entity = getById(id);
+        if(dto.getRole()!=entity.getRole()){
+            throw new AppBadRequestException("You can not change your role ");
+        }
+        entity.setName(dto.getName());
+        entity.setSurname(dto.getSurname());
+        entity.setUsername(dto.getUsername());
+        entity.setPassword(dto.getPassword());
+        entity.setRole(dto.getRole());
+
+        profileRepository.save(entity);
+        return true;
+    }
 }

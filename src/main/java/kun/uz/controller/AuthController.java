@@ -19,32 +19,23 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/registration")
-    public ResponseEntity<String> registration (@RequestBody RegistrationDTO dto){
+    public ResponseEntity<String> registration(@RequestBody RegistrationDTO dto) {
         return ResponseEntity.ok(authService.registration(dto));
     }
 
     @GetMapping("/registration/confirm/{id}")
-    public ResponseEntity<String> registrationEmailConfirm(@PathVariable Integer id){
-        return ResponseEntity.ok(authService.emailConfirm(id,LocalDateTime.now()));
+    public ResponseEntity<String> registrationEmailConfirm(@PathVariable Integer id) {
+        return ResponseEntity.ok(authService.emailConfirm(id, LocalDateTime.now()));
     }
 
-   @PostMapping("/registration/confirm/sms")
-    public ResponseEntity<String> registrationSmsConfirm (@RequestBody SmsConfirmDTO dto){
-        return ResponseEntity.ok(authService.smsConfirm(dto,LocalDateTime.now()));
+    @PostMapping("/registration/confirm/sms")
+    public ResponseEntity<String> registrationSmsConfirm(@RequestBody SmsConfirmDTO dto) {
+        return ResponseEntity.ok(authService.smsConfirm(dto, LocalDateTime.now()));
 
-<<<<<<< HEAD
     }
+
     @PostMapping("/login")
-    public ResponseEntity<ProfileDTO> login(@RequestBody  @Valid AuthDTO dto){
+    public ResponseEntity<ProfileDTO> login(@RequestBody @Valid AuthDTO dto) {
         return ResponseEntity.ok(authService.login(dto));
-=======
->>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
     }
-
-
-
-<<<<<<< HEAD
-
-=======
->>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
 }

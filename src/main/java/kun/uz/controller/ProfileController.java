@@ -1,7 +1,6 @@
 package kun.uz.controller;
 
 import jakarta.validation.Valid;
-import kun.uz.dto.AuthDTO;
 import kun.uz.dto.FilterDTO;
 import kun.uz.dto.ProfileCreationDTO;
 import kun.uz.dto.ProfileDTO;
@@ -28,14 +27,22 @@ public class ProfileController {
     }
 
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateProfile(@PathVariable Integer id, @Valid @RequestBody ProfileDTO profile) {
-        return ResponseEntity.ok(profileService.update(id,profile));
+    @PutMapping("update/by-admin/{id}")
+    public ResponseEntity<?> updateProfileByAdmin(@PathVariable Integer id,
+                                           @Valid @RequestBody ProfileCreationDTO dto,
+                                           @RequestHeader("Authorization") String token) {
+        return ResponseEntity.ok(profileService.updateByAdmin(id,dto,token));
+    }
+    @PutMapping("update/by-own/{id}")
+    public ResponseEntity<?> updateProfileByOwn(@PathVariable Integer id,
+                                                  @Valid @RequestBody ProfileCreationDTO dto) {
+        return ResponseEntity.ok(profileService.updateByOwn(id,dto));
     }
 
     @GetMapping("/all")
     public ResponseEntity<Page<ProfileDTO>> getAllProfiles(@RequestParam Integer page, @RequestParam Integer size) {
-        return ResponseEntity.ok(profileService.getAll((page-1),size));
+        page = Math.max(0,page-1);
+        return ResponseEntity.ok(profileService.getAll((page),size));
     }
 
     @PutMapping("/delete/{id}")
@@ -47,7 +54,8 @@ public class ProfileController {
     public ResponseEntity<Page<ProfileDTO>> filter(@RequestParam Integer page,
                                                    @RequestParam Integer size,
                                                    @RequestBody FilterDTO dto) {
-        return ResponseEntity.ok(profileService.filter((page-1),size,dto));
+        page = Math.max(0,page-1);
+        return ResponseEntity.ok(profileService.filter((page),size,dto));
 
     }
 }

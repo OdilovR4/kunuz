@@ -17,7 +17,7 @@ import java.util.List;
 public interface ProfileRepository extends CrudRepository<ProfileEntity, Integer>,
         PagingAndSortingRepository<ProfileEntity, Integer> {
 
-    @Query(value = "From ProfileEntity as p where p.visible = false order by p.id asc")
+    @Query(value = "From ProfileEntity as p where p.visible = true order by p.id asc")
     Page<ProfileEntity> findAllByVisibleTrue(Pageable pageable);
 
     @Query(value = "From ProfileEntity as p where p.visible = true order by p.id asc")
