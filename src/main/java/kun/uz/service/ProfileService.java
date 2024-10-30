@@ -31,12 +31,12 @@ public class ProfileService {
     @Autowired
     CustomProfileRepository profileCustomRepository;
 
-    public ProfileDTO create(ProfileCreationDTO dto, String jwtToken) {
+    public ProfileDTO create(ProfileCreationDTO dto) {
         ProfileEntity entity = profileRepository.getByUsername(dto.getUsername());
         if (entity != null) {
             throw new ResourceNotFoundException("Profile already exist");
         }
-        jwtValidator(jwtToken);
+       // jwtValidator(jwtToken);
         ProfileEntity profile = new ProfileEntity();
         profile.setUsername(dto.getUsername());
         profile.setPassword(dto.getPassword());
@@ -54,18 +54,17 @@ public class ProfileService {
 
     }
 
-    public static void jwtValidator(String jwtToken) {
-        JwtDTO dto = JwtUtil.decode(jwtToken);
-        if (dto.getUsername() == null || dto.getRole() == null) {
-            throw new AppBadRequestException("Invalid JWT to do smth ");
-        }
-        if (!dto.getRole().equals(ProfileRole.ROLE_ADMIN.name())) {
-            throw new AppBadRequestException("Invalid role to do smth");
-        }
-    }
+//    public static void jwtValidator(String jwtToken) {
+//        JwtDTO dto = JwtUtil.decode(jwtToken);
+//        if (dto.getUsername() == null || dto.getRole() == null) {
+//            throw new AppBadRequestException("Invalid JWT to do smth ");
+//        }
+//        if (!dto.getRole().equals(ProfileRole.ROLE_ADMIN.name())) {
+//            throw new AppBadRequestException("Invalid role to do smth");
+//        }
+//    }
 
-    public boolean updateByAdmin(Integer id, @Valid ProfileCreationDTO profile, String jwtToken) {
-        jwtValidator(jwtToken);
+    public boolean updateByAdmin(Integer id, @Valid ProfileCreationDTO profile) {
         ProfileEntity entity = getById(id);
         entity.setName(profile.getName());
         entity.setUsername(profile.getUsername());

@@ -50,6 +50,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-security</artifactId>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-validation</artifactId>
 			</dependency>
 			<dependency>
@@ -74,8 +79,6 @@
 				<version>5.0.0-alpha.12</version>
 			</dependency>
 
-<<<<<<< HEAD
-
 				<dependency>
 					<groupId>io.jsonwebtoken</groupId>
 					<artifactId>jjwt-api</artifactId>
@@ -94,9 +97,6 @@
 					<version>0.11.5</version>
 				</dependency>
 
-
-=======
->>>>>>> ff86d3875ead696e854446a49c98943d12e9089b
 		</dependencies>
 
 	<build>

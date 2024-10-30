@@ -1,6 +1,7 @@
 package kun.uz.exceptions;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -37,5 +38,10 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     @ExceptionHandler({IllegalArgumentException.class ,AppBadRequestException.class, ResourceNotFoundException.class})
     public ResponseEntity<String> illegalArgument(RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(AppBadForbiddenException.class)
+    public ResponseEntity<String> illegalArgument(AppBadForbiddenException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 }
