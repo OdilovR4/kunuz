@@ -1,4 +1,4 @@
-package kun.uz.controller;
+package kun.uz.controller.profile;
 
 import kun.uz.service.EmailHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;

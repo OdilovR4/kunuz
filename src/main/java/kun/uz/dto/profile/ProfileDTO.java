@@ -1,4 +1,4 @@
-package kun.uz.dto;
+package kun.uz.dto.profile;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;

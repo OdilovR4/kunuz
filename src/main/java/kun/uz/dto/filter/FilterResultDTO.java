@@ -1,4 +1,4 @@
-package kun.uz.dto;
+package kun.uz.dto.filter;
 
 import lombok.Getter;
 import lombok.Setter;

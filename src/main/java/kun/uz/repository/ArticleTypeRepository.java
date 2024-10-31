@@ -1,7 +1,7 @@
 package kun.uz.repository;
 
 import jakarta.transaction.Transactional;
-import kun.uz.dto.NameInterface;
+import kun.uz.dto.base.NameInterface;
 import kun.uz.entity.ArticleTypeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

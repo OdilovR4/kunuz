@@ -1,7 +1,7 @@
 package kun.uz.service;
 
-import kun.uz.dto.CategoryDTO;
-import kun.uz.dto.NameOrder;
+import kun.uz.dto.category.CategoryDTO;
+import kun.uz.dto.base.NameOrder;
 import kun.uz.entity.CategoryEntity;
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.CategoryRepository;

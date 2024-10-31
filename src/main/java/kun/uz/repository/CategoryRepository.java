@@ -1,7 +1,7 @@
 package kun.uz.repository;
 
 import jakarta.transaction.Transactional;
-import kun.uz.dto.NameOrder;
+import kun.uz.dto.base.NameOrder;
 import kun.uz.entity.CategoryEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

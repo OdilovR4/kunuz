@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import kun.uz.dto.JwtDTO;
+import kun.uz.dto.base.JwtDTO;
 
 import java.security.Key;
 import java.util.Date;

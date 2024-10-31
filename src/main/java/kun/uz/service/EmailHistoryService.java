@@ -1,6 +1,6 @@
 package kun.uz.service;
 
-import kun.uz.dto.EmailHistoryDTO;
+import kun.uz.dto.profile.EmailHistoryDTO;
 import kun.uz.entity.EmailHistoryEntity;
 import kun.uz.repository.EmailHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;

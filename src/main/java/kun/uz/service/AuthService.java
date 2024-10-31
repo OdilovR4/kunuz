@@ -1,9 +1,9 @@
 package kun.uz.service;
 
-import kun.uz.dto.AuthDTO;
-import kun.uz.dto.ProfileDTO;
-import kun.uz.dto.RegistrationDTO;
-import kun.uz.dto.SmsConfirmDTO;
+import kun.uz.dto.profile.AuthDTO;
+import kun.uz.dto.profile.ProfileDTO;
+import kun.uz.dto.profile.RegistrationDTO;
+import kun.uz.dto.profile.SmsConfirmDTO;
 import kun.uz.entity.ProfileEntity;
 import kun.uz.enums.ProfileStatus;
 import kun.uz.exceptions.AppBadRequestException;
@@ -27,29 +27,28 @@ public class AuthService {
 
     public String registration(RegistrationDTO dto) {
         ProfileEntity usernameEntity = profileRepository.getByUsername(dto.getUsername());
-        if (usernameEntity != null) {
-            if (usernameEntity.getStatus() == ProfileStatus.ACTIVE) {
-                throw new AppBadRequestException("This username already in use");
-            }
-            if(usernameEntity.getStatus()==ProfileStatus.BLOCKED) {
-                throw new AppBadRequestException("This username is blocked");
-            }
-            if (usernameEntity.getStatus() == ProfileStatus.IN_REGISTRATION) {
-                if (dto.getUsername().endsWith("@gmail.com")) {
-                  return emailService.sendToEmail(usernameEntity.getId(), dto.getUsername());
-                }
-                else {
-                    return smsService.sendRegistrationSms(dto.getUsername());
-                }
-            }
 
+        if (usernameEntity != null) {
+            switch (usernameEntity.getStatus()) {
+                case ACTIVE -> throw new AppBadRequestException("This username already in use");
+                case BLOCKED -> throw new AppBadRequestException("This username is blocked");
+                case IN_REGISTRATION -> {
+                    if (dto.getUsername().endsWith("@gmail.com")) {
+                        return emailService.sendToEmail(usernameEntity.getId(), dto.getUsername());
+                    } else {
+                        return smsService.sendRegistrationSms(dto.getUsername());
+                    }
+                }
+            }
         }
+
         if (dto.getUsername().endsWith("@gmail.com")) {
             return emailService.createByEmail(dto);
         } else {
-           return smsService.createByPhone(dto);
+            return smsService.createByPhone(dto);
         }
     }
+
 
 
     public String emailConfirm(Integer id, LocalDateTime clickTime) {

@@ -1,4 +1,4 @@
-package kun.uz.dto;
+package kun.uz.dto.base;
 
 public interface NameInterface{
     String getName();

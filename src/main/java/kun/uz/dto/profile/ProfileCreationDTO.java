@@ -1,4 +1,4 @@
-package kun.uz.dto;
+package kun.uz.dto.profile;
 
 import jakarta.validation.constraints.*;
 import kun.uz.enums.ProfileRole;

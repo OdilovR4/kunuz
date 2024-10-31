@@ -1,7 +1,7 @@
 package kun.uz.service;
 
-import kun.uz.dto.ArticleTypeDTO;
-import kun.uz.dto.NameInterface;
+import kun.uz.dto.article.ArticleTypeDTO;
+import kun.uz.dto.base.NameInterface;
 import kun.uz.entity.ArticleTypeEntity;
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.ArticleTypeRepository;
@@ -21,8 +21,7 @@ public class ArticleTypeService {
     @Autowired
     ArticleTypeRepository articleRepository;
 
-    public ArticleTypeDTO create(ArticleTypeDTO dto, String token) {
-        ProfileService.jwtValidator(token);
+    public ArticleTypeDTO create(ArticleTypeDTO dto) {
         ArticleTypeEntity entity = new ArticleTypeEntity();
         entity.setOrderNumber(dto.getOrderNumber());
         entity.setNameUz(dto.getNameUz());
@@ -36,8 +35,7 @@ public class ArticleTypeService {
         return dto;
     }
 
-    public String update(Integer id, ArticleTypeDTO dto, String token) {
-        ProfileService.jwtValidator(token);
+    public String update(Integer id, ArticleTypeDTO dto) {
         ArticleTypeEntity entity = articleRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("Post Not Found"));
 
@@ -58,16 +56,14 @@ public class ArticleTypeService {
         return "UPDATED";
     }
 
-    public String delete(Integer id, String token) {
-        ProfileService.jwtValidator(token);
+    public String delete(Integer id) {
         if(articleRepository.deleteArticleType(id)==1){
             return "DELETED";
         }
         throw new  ResourceNotFoundException("Post Not Found");
     }
 
-    public PageImpl<ArticleTypeDTO> getAll(int page, int size, String token) {
-        ProfileService.jwtValidator(token);
+    public PageImpl<ArticleTypeDTO> getAll(int page, int size) {
 //        PageRequest pageRequest = PageRequest.of(page, size);
 //        Page<ArticleTypeEntity> pageEntity = articleRepository.getAll(pageRequest);
 //        List<ArticleTypeDTO> pageDTO = changeToDTOList(articleRepository.getAll(pageRequest).getContent());

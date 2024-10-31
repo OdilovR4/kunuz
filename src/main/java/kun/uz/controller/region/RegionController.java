@@ -1,6 +1,6 @@
-package kun.uz.controller;
+package kun.uz.controller.region;
 
-import kun.uz.dto.RegionDTO;
+import kun.uz.dto.region.RegionDTO;
 import kun.uz.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

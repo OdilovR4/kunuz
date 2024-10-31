@@ -1,15 +1,17 @@
 package kun.uz.service;
 
 import jakarta.validation.Valid;
-import kun.uz.dto.*;
+import kun.uz.dto.filter.FilterDTO;
+import kun.uz.dto.filter.FilterResultDTO;
+import kun.uz.dto.profile.ProfileCreationDTO;
+import kun.uz.dto.profile.ProfileDTO;
+import kun.uz.dto.profile.UpdateProfileDetail;
 import kun.uz.entity.ProfileEntity;
-import kun.uz.enums.ProfileRole;
 import kun.uz.enums.ProfileStatus;
 import kun.uz.exceptions.AppBadRequestException;
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.CustomProfileRepository;
 import kun.uz.repository.ProfileRepository;
-import kun.uz.util.JwtUtil;
 import kun.uz.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -118,18 +120,19 @@ public class ProfileService {
         return new PageImpl<>(dtoList, PageRequest.of(page, size), result.getTotal());
     }
 
-    public Boolean updateByOwn(Integer id, @Valid ProfileCreationDTO dto) {
-        ProfileEntity entity = getById(id);
-        if(dto.getRole()!=entity.getRole()){
-            throw new AppBadRequestException("You can not change your role ");
-        }
+    public Boolean updateByOwn(@Valid UpdateProfileDetail dto, String username) {
+        ProfileEntity entity = getByUsername(username);
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
-        entity.setUsername(dto.getUsername());
-        entity.setPassword(dto.getPassword());
-        entity.setRole(dto.getRole());
-
         profileRepository.save(entity);
         return true;
+    }
+
+    private ProfileEntity getByUsername(String username) {
+        ProfileEntity entity = profileRepository.findByUsername(username);
+        if (entity == null) {
+            throw new ResourceNotFoundException("Profile not found");
+        }
+        return entity;
     }
 }

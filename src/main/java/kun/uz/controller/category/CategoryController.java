@@ -1,6 +1,6 @@
-package kun.uz.controller;
+package kun.uz.controller.category;
 
-import kun.uz.dto.CategoryDTO;
+import kun.uz.dto.category.CategoryDTO;
 import kun.uz.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

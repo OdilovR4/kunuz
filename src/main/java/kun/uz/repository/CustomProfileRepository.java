@@ -2,8 +2,8 @@ package kun.uz.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import kun.uz.dto.FilterDTO;
-import kun.uz.dto.FilterResultDTO;
+import kun.uz.dto.filter.FilterDTO;
+import kun.uz.dto.filter.FilterResultDTO;
 import kun.uz.entity.ProfileEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

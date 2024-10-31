@@ -1,6 +1,6 @@
 package kun.uz.service;
 
-import kun.uz.dto.RegistrationDTO;
+import kun.uz.dto.profile.RegistrationDTO;
 import kun.uz.entity.EmailHistoryEntity;
 import kun.uz.entity.ProfileEntity;
 import kun.uz.enums.ProfileRole;

@@ -1,9 +1,9 @@
 package kun.uz.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kun.uz.dto.RegistrationDTO;
-import kun.uz.dto.SmsAuthResponseDTO;
-import kun.uz.dto.SmsConfirmDTO;
+import kun.uz.dto.profile.RegistrationDTO;
+import kun.uz.dto.profile.SmsAuthResponseDTO;
+import kun.uz.dto.profile.SmsConfirmDTO;
 import kun.uz.entity.ProfileEntity;
 import kun.uz.entity.SmsHistoryEntity;
 import kun.uz.entity.TokenEntity;

@@ -1,10 +1,10 @@
-package kun.uz.controller;
+package kun.uz.controller.profile;
 
 import jakarta.validation.Valid;
-import kun.uz.dto.AuthDTO;
-import kun.uz.dto.ProfileDTO;
-import kun.uz.dto.RegistrationDTO;
-import kun.uz.dto.SmsConfirmDTO;
+import kun.uz.dto.profile.AuthDTO;
+import kun.uz.dto.profile.ProfileDTO;
+import kun.uz.dto.profile.RegistrationDTO;
+import kun.uz.dto.profile.SmsConfirmDTO;
 import kun.uz.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,7 +1,7 @@
 package kun.uz.service;
 
-import kun.uz.dto.NameInterface;
-import kun.uz.dto.RegionDTO;
+import kun.uz.dto.base.NameInterface;
+import kun.uz.dto.region.RegionDTO;
 import kun.uz.entity.RegionEntity;
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.RegionRepository;

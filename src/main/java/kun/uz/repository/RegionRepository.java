@@ -1,7 +1,7 @@
 package kun.uz.repository;
 
 import jakarta.transaction.Transactional;
-import kun.uz.dto.NameInterface;
+import kun.uz.dto.base.NameInterface;
 import kun.uz.entity.RegionEntity;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

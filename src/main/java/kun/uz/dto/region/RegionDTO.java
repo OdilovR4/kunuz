@@ -1,5 +1,6 @@
-package kun.uz.dto;
+package kun.uz.dto.region;
 
+import kun.uz.dto.base.BaseDTO;
 import lombok.Getter;
 import lombok.Setter;
 

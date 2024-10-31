@@ -1,4 +1,4 @@
-package kun.uz.dto;
+package kun.uz.dto.base;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
