@@ -15,6 +15,7 @@ import java.util.*;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
@@ -35,13 +36,17 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler({IllegalArgumentException.class ,AppBadRequestException.class, ResourceNotFoundException.class})
+    @ExceptionHandler({AppBadRequestException.class, ResourceNotFoundException.class})
     public ResponseEntity<String> illegalArgument(RuntimeException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
-
     @ExceptionHandler(AppBadForbiddenException.class)
     public ResponseEntity<String> illegalArgument(AppBadForbiddenException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
+    @ExceptionHandler(AppBadAuthorizationException.class)
+    public ResponseEntity<String> illegalArgument(AppBadAuthorizationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
     }
 }

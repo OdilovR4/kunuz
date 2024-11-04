@@ -1,6 +1,5 @@
 package kun.uz.config;
 
-import jakarta.persistence.*;
 import kun.uz.entity.ProfileEntity;
 import kun.uz.enums.ProfileRole;
 import kun.uz.enums.ProfileStatus;

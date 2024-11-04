@@ -47,6 +47,7 @@ public class ProfileDTO {
 
    LocalDateTime createdDate;
 
+   @NotNull(message = "It is not be empty or null ")
    String jwtToken;
 
 }
