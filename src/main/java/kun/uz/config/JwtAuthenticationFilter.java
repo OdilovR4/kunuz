@@ -31,9 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String authHeader = extractJwtFromRequest(request);
         if (authHeader == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().println("Authorization header is invalid");
-            response.getWriter().flush();
+            filterChain.doFilter(request, response); // Continue the filter chain
             return;
         }
 

@@ -1,4 +1,4 @@
- package kun.uz.config;
+package kun.uz.config;
 
 
 import kun.uz.util.BCryptUtil;
@@ -32,7 +32,7 @@ public class SpringSecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
-         //  authentication - Foydalanuvchining identifikatsiya qilish.
+        //  authentication - Foydalanuvchining identifikatsiya qilish.
         //   Ya'ni berilgan login va parolli user bor yoki yo'qligini aniqlash.
         final DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
@@ -48,6 +48,7 @@ public class SpringSecurityConfig {
             authorizationManagerRequestMatcherRegistry
                     .requestMatchers("/profile/update/by-own").permitAll()
                     .requestMatchers("/article/get-by-lang").permitAll()
+                    .requestMatchers("/attach/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -71,7 +72,5 @@ public class SpringSecurityConfig {
                 return bcrypt.equals(encodedPassword);
             }
         };
-
-
     }
 }
