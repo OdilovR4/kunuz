@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -23,8 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AttachService {
@@ -108,6 +111,21 @@ public class AttachService {
         }
 
     }
+    
+    public Resource download(String id) {
+        AttachEntity entity = getById(id);
+        Path path =  Paths.get(folderName+"/"+entity.getPath()+"/"+entity.getId()).normalize();
+        try {
+            Resource resource = new UrlResource(path.toUri());
+            if(resource.exists() || resource.isReadable()){
+                return resource;
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
 
     private String getYmDString() {
@@ -137,5 +155,19 @@ public class AttachService {
     }
 
 
+    public Page<AttachDTO> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<AttachEntity> entityPage = attachRepository.getAll(pageable);
+        List<AttachDTO> dtoList = new LinkedList<>();
+        for(AttachEntity entity : entityPage){
+            dtoList.add(toDTO(entity));
+        }
+        return new PageImpl<>(dtoList,pageable,entityPage.getTotalPages());
+    }
 
+    public String delete(String id) {
+        AttachEntity entity = getById(id);
+        attachRepository.delete(entity);
+        return "Successfully deleted";
+    }
 }
