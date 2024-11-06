@@ -25,7 +25,7 @@ public class CustomUserDetails implements UserDetails {
     private ProfileStatus status;
     private Boolean visible;
     private LocalDateTime createdDate;
-    private Integer photoId;
+    private String photoId;
 
     public CustomUserDetails(ProfileEntity entity) {
         this.name = entity.getName();

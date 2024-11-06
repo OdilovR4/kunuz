@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import kun.uz.dto.attach.AttachDTO;
 import kun.uz.enums.ProfileRole;
 import kun.uz.enums.ProfileStatus;
 import lombok.Getter;
@@ -43,11 +44,13 @@ public class ProfileDTO {
    @NotNull(message = "role is required")
    ProfileRole role;
 
-   Integer photoId;
+   String photoId;
 
    LocalDateTime createdDate;
 
    @NotNull(message = "It is not be empty or null ")
    String jwtToken;
+
+   private AttachDTO photo;
 
 }

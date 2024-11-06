@@ -33,7 +33,8 @@ public class ProfileController {
                                            @Valid @RequestBody ProfileCreationDTO dto) {
         return ResponseEntity.ok(profileService.updateByAdmin(id,dto));
     }
-    @PutMapping("update/by-own")
+
+    @PutMapping("/update/by-own")
     public ResponseEntity<?> updateProfileByOwn(@Valid @RequestBody UpdateProfileDetail dto,
                                                 @RequestHeader("Authorization") String token) {
         JwtDTO jwtDTO = JwtUtil.decode(token);

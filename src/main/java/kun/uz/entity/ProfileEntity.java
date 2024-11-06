@@ -41,6 +41,6 @@ public class ProfileEntity {
     LocalDateTime createdDate;
 
     @Column(name = "photo_id")
-    Integer photoId;
+    String photoId;
 
 }

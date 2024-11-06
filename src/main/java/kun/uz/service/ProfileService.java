@@ -12,7 +12,6 @@ import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.CustomProfileRepository;
 import kun.uz.repository.ProfileRepository;
 import kun.uz.util.BCryptUtil;
-import kun.uz.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,10 +27,12 @@ import java.util.List;
 public class ProfileService {
 
     @Autowired
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
+    @Autowired
+    private AttachService attachService;
 
     @Autowired
-    CustomProfileRepository profileCustomRepository;
+    private CustomProfileRepository profileCustomRepository;
 
     public ProfileDTO create(ProfileCreationDTO dto) {
         ProfileEntity entity = profileRepository.getByUsername(dto.getUsername());
@@ -41,7 +42,6 @@ public class ProfileService {
        // jwtValidator(jwtToken);
         ProfileEntity profile = new ProfileEntity();
         profile.setUsername(dto.getUsername());
-        profile.setPassword(dto.getPassword());
         profile.setName(dto.getName());
         profile.setSurname(dto.getSurname());
        // profile.setPassword(MD5Util.md5(dto.getPassword()));
@@ -101,9 +101,9 @@ public class ProfileService {
         dto.setPassword(entity.getPassword());
         dto.setRole(entity.getRole());
         dto.setSurname(entity.getSurname());
-        dto.setPhotoId(entity.getPhotoId());
         dto.setStatus(entity.getStatus());
         dto.setCreatedDate(entity.getCreatedDate());
+        dto.setPhoto(attachService.getDto(entity.getPhotoId()));
 
         return dto;
     }
@@ -125,6 +125,10 @@ public class ProfileService {
         ProfileEntity entity = getByUsername(username);
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
+        if(entity.getPhotoId()!=null){
+            attachService.delete(entity.getPhotoId());
+        }
+        entity.setPhotoId(dto.getPhotoId());
         profileRepository.save(entity);
         return true;
     }

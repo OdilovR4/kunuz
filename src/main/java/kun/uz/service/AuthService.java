@@ -11,6 +11,8 @@ import kun.uz.repository.ProfileRepository;
 import kun.uz.util.JwtUtil;
 import kun.uz.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,9 @@ public class AuthService {
     private SmsService smsService;
     @Autowired
     EmailService emailService;
+    @Autowired
+    private AttachService attachService;
+
 
 
     public String registration(RegistrationDTO dto) {
@@ -70,10 +75,10 @@ public class AuthService {
     public ProfileDTO login(AuthDTO dto){
         ProfileEntity entity = profileRepository.getByUsername(dto.getUsername());
         if(entity==null) {
-            throw new AppBadRequestException("1 Invalid username or password");
+            throw new AppBadRequestException("Invalid username or password");
         }
         if(!entity.getPassword().equals(MD5Util.md5(dto.getPassword()))) {
-            throw new AppBadRequestException("2 Invalid username or password");
+            throw new AppBadRequestException("Invalid username or password");
         }
         if(!entity.getStatus().equals(ProfileStatus.ACTIVE)) {
             throw new AppBadRequestException("User is not active");
@@ -85,6 +90,7 @@ public class AuthService {
         profileDTO.setUsername(entity.getUsername());
         profileDTO.setSurname(entity.getSurname());
         profileDTO.setJwtToken(JwtUtil.encode(entity.getUsername(),entity.getRole().toString()));
+        profileDTO.setPhoto(attachService.getDto(entity.getPhotoId()));
 
         // 1. findByPhone()
         // 2. check IN_REGISTRATION

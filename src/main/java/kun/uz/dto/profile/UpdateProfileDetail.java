@@ -11,4 +11,5 @@ public class UpdateProfileDetail {
     private String name;
     @NotBlank
     private String surname;
+    private String photoId;
 }

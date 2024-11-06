@@ -33,9 +33,7 @@ public class AttachController {
 
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable String id) {
-        Resource resource = attachService.download(id);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + "mazgibek." + id.substring(id.lastIndexOf(".") + 1) + "\"").body(resource);
+        return attachService.download(id);
 
     }
 
