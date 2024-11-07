@@ -50,6 +50,7 @@ public class SpringSecurityConfig {
                     .requestMatchers("/article/get-by-lang").permitAll()
                     .requestMatchers("/attach/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/post/**").permitAll()
                     .anyRequest()
                     .authenticated();
         }).addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
