@@ -43,4 +43,8 @@ public class ProfileEntity {
     @Column(name = "photo_id")
     String photoId;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "photo_id", insertable = false, updatable = false)
+    private AttachEntity photo;
+
 }

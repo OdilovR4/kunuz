@@ -1,13 +1,11 @@
 package kun.uz.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +29,9 @@ public class AttachEntity {
 
     @Column(name = "created_date")
     private LocalDateTime createdDate = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "attach")
+    private List<PostAttachEntity> posts;
 
     @Column(name = "visible")
     private Boolean visible = true;

@@ -18,12 +18,20 @@ public class PostAttachEntity {
     @Column(name = "post_id")
     Integer postId;
 
+
     @Column(name = "attach_id")
     String  attachId;
 
+    @ManyToOne
+    @JoinColumn(name = "post_id", insertable = false, updatable = false)
+    private PostEntity post;
+
+    @ManyToOne
+    @JoinColumn(name = "attach_id", insertable = false, updatable = false)
+    private AttachEntity attach;
+
     @Column(name = "created_date")
     LocalDateTime createdDate;
-
 
 
 }
