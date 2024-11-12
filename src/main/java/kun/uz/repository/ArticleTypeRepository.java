@@ -31,9 +31,4 @@ public interface ArticleTypeRepository extends CrudRepository<ArticleTypeEntity,
             " order by a.id asc ")
     List<NameInterface> getByLang(@Param("lang") String lang);
 
-
-
-
-
-
 }

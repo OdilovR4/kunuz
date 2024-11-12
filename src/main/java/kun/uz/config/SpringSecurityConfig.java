@@ -47,7 +47,7 @@ public class SpringSecurityConfig {
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
             authorizationManagerRequestMatcherRegistry
                     .requestMatchers("/profile/update/by-own").permitAll()
-                    .requestMatchers("/article/get-by-lang").permitAll()
+                    .requestMatchers("/article/**").permitAll()
                     .requestMatchers("/attach/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/post/**").permitAll()

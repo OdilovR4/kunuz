@@ -12,6 +12,7 @@ import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.CustomProfileRepository;
 import kun.uz.repository.ProfileRepository;
 import kun.uz.util.BCryptUtil;
+import kun.uz.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -45,7 +46,7 @@ public class ProfileService {
         profile.setName(dto.getName());
         profile.setSurname(dto.getSurname());
        // profile.setPassword(MD5Util.md5(dto.getPassword()));
-        profile.setPassword(BCryptUtil.bcrypt(dto.getPassword()));
+        profile.setPassword(MD5Util.md5(dto.getPassword()));
         profile.setStatus(ProfileStatus.ACTIVE);
         profile.setVisible(Boolean.TRUE);
         profile.setRole(dto.getRole());
@@ -133,11 +134,19 @@ public class ProfileService {
         return true;
     }
 
-    private ProfileEntity getByUsername(String username) {
+    public ProfileEntity getByUsername(String username) {
         ProfileEntity entity = profileRepository.findByUsername(username);
         if (entity == null) {
             throw new ResourceNotFoundException("Profile not found");
         }
         return entity;
+    }
+
+    public ProfileDTO getProfile(Integer profileId) {
+        ProfileEntity entity = getById(profileId);
+        ProfileDTO dto = new ProfileDTO();
+        dto.setName(entity.getName());
+        dto.setSurname(entity.getSurname());
+        return dto;
     }
 }

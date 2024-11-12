@@ -17,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 public class CustomUserDetails implements UserDetails {
+    private Integer id;
     private String name;
     private String surname;
     private String username;
@@ -28,6 +29,7 @@ public class CustomUserDetails implements UserDetails {
     private String photoId;
 
     public CustomUserDetails(ProfileEntity entity) {
+        this.id = entity.getId();
         this.name = entity.getName();
         this.surname = entity.getSurname();
         this.username = entity.getUsername();

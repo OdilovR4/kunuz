@@ -8,6 +8,7 @@ import kun.uz.entity.ProfileEntity;
 import kun.uz.enums.ProfileStatus;
 import kun.uz.exceptions.AppBadRequestException;
 import kun.uz.repository.ProfileRepository;
+import kun.uz.util.BCryptUtil;
 import kun.uz.util.JwtUtil;
 import kun.uz.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,10 +76,10 @@ public class AuthService {
     public ProfileDTO login(AuthDTO dto){
         ProfileEntity entity = profileRepository.getByUsername(dto.getUsername());
         if(entity==null) {
-            throw new AppBadRequestException("Invalid username or password");
+            throw new AppBadRequestException("Invalid username or password 1");
         }
         if(!entity.getPassword().equals(MD5Util.md5(dto.getPassword()))) {
-            throw new AppBadRequestException("Invalid username or password");
+            throw new AppBadRequestException("Invalid username or password 2");
         }
         if(!entity.getStatus().equals(ProfileStatus.ACTIVE)) {
             throw new AppBadRequestException("User is not active");

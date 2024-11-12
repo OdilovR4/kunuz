@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class ArticleTypeService {
     @Autowired
-    ArticleTypeRepository articleRepository;
+    ArticleTypeRepository articleTypeRepository;
 
     public ArticleTypeDTO create(ArticleTypeDTO dto) {
         ArticleTypeEntity entity = new ArticleTypeEntity();
@@ -29,14 +29,14 @@ public class ArticleTypeService {
         entity.setNameRu(dto.getNameRu());
         entity.setCreatedDate(LocalDateTime.now());
         entity.setVisible(true);
-        articleRepository.save(entity);
+        articleTypeRepository.save(entity);
         dto.setId(entity.getId());
         dto.setCreatedDate(entity.getCreatedDate());
         return dto;
     }
 
     public String update(Integer id, ArticleTypeDTO dto) {
-        ArticleTypeEntity entity = articleRepository.findById(id).orElseThrow(()
+        ArticleTypeEntity entity = articleTypeRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException("Post Not Found"));
 
         if(dto.getNameUz()!=null){
@@ -52,12 +52,12 @@ public class ArticleTypeService {
             entity.setOrderNumber(dto.getOrderNumber());
         }
 
-        articleRepository.save(entity);
+        articleTypeRepository.save(entity);
         return "UPDATED";
     }
 
     public String delete(Integer id) {
-        if(articleRepository.deleteArticleType(id)==1){
+        if(articleTypeRepository.deleteArticleType(id)==1){
             return "DELETED";
         }
         throw new  ResourceNotFoundException("Post Not Found");
@@ -69,7 +69,7 @@ public class ArticleTypeService {
 //        List<ArticleTypeDTO> pageDTO = changeToDTOList(articleRepository.getAll(pageRequest).getContent());
 //        long total = pageEntity.getTotalElements();
 //        return new PageImpl(pageDTO, pageRequest, total);
-        return helper(PageRequest.of(page, size),articleRepository.getAll(PageRequest.of(page, size)));
+        return helper(PageRequest.of(page, size),articleTypeRepository.getAll(PageRequest.of(page, size)));
     }
 
     //public
@@ -86,7 +86,7 @@ public class ArticleTypeService {
     }
 
     public List<NameInterface> getByLang(String lang) {
-        return articleRepository.getByLang(lang);
+        return articleTypeRepository.getByLang(lang);
     }
 
     public List<ArticleTypeDTO>changeToDTOList(List<ArticleTypeEntity> entityList) {
@@ -104,6 +104,8 @@ public class ArticleTypeService {
     return new PageImpl<>(changeToDTOList(entityPage.getContent()), pageable, entityPage.getTotalElements());
     }
 
-
+    public ArticleTypeDTO getById(Integer id) {
+        return changeToDTO(articleTypeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post Not Found")));
+    }
 
 }

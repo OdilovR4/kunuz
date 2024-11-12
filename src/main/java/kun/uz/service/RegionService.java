@@ -100,4 +100,8 @@ public class RegionService {
         return regionRepository.getByLang(lang);
 
     }
+
+    public RegionDTO getById(Integer regionId) {
+        return changeToDTO(regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException("Not found")));
+    }
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("article")
+@RequestMapping("article-type")
 public class ArticleTypeController {
     @Autowired
     private ArticleTypeService articleTypeService;
