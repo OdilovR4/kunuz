@@ -1,9 +1,7 @@
 package kun.uz.controller.article;
 
-import kun.uz.dto.article.ArticleCreationDTO;
-import kun.uz.dto.article.ArticleDTO;
-import kun.uz.dto.article.ArticleIdsDTO;
-import kun.uz.dto.article.UpdateArticleDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import kun.uz.dto.article.*;
 import kun.uz.dto.base.JwtDTO;
 import kun.uz.service.ArticleService;
 import kun.uz.util.JwtUtil;
@@ -107,6 +105,10 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getByCategory(categoryId));
     }
 
+    @GetMapping("/view-count/{articleId}")
+    public ResponseEntity<ArticleShortInfoDTO> increaseViewCount(@PathVariable String articleId, HttpServletRequest request){
+        return ResponseEntity.ok(articleService.increaseViewCount(articleId, request));
+    }
 
 
 }

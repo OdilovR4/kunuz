@@ -1,5 +1,6 @@
 package kun.uz.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import kun.uz.dto.article.*;
 import kun.uz.entity.ArticleEntity;
 import kun.uz.enums.ArticleStatus;
@@ -32,7 +33,7 @@ public class ArticleService {
     @Autowired
     private RegionService regionService;
     @Autowired
-    private ArticleTypeService articleTypeService;
+    private IpArticleService ipArticleService;
 
     public ArticleCreationDTO createArticle(ArticleCreationDTO creationDTO) {
         ArticleEntity articleEntity = new ArticleEntity();
@@ -217,5 +218,24 @@ public class ArticleService {
     }
 
 
+    public ArticleShortInfoDTO increaseViewCount(String articleId, HttpServletRequest request) {
+        ArticleEntity entity = articleRepository.getById(articleId);
+        String ip = request.getHeader("x-forwarded-for");
 
+        if(!ipArticleService.isExistIp(ip, articleId)){
+            entity.setViewCount(entity.getViewCount()+1);
+            articleRepository.save(entity);
+        }
+        ArticleShortInfoDTO dto = new ArticleShortInfoDTO();
+        dto.setId(entity.getId());
+        dto.setTitle(entity.getTitle());
+        dto.setDescription(entity.getDescription());
+        dto.setPhoto(attachService.getDto(entity.getPhotoId()));
+        dto.setPublishedDate(entity.getPublishedDate());
+
+        return dto;
+
+
+
+    }
 }

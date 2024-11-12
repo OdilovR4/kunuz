@@ -51,4 +51,6 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity,String>,
     @Query("Select  a.id as id, a.title as title, a.description as description, a.photoId as photoId, a.publishedDate as publishDate " +
             "From ArticleEntity as a where a.status = ?1 and a.visible = true and a.categoryId = ?2 order by a.publishedDate desc ")
     Page<ArticleShortInfoMapper> getByCategory(ArticleStatus articleStatus, Integer categoryId, Pageable pageable);
+
+
 }
