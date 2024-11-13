@@ -3,6 +3,7 @@ package kun.uz.controller.article;
 import jakarta.servlet.http.HttpServletRequest;
 import kun.uz.dto.article.*;
 import kun.uz.dto.base.JwtDTO;
+import kun.uz.enums.LikeStatus;
 import kun.uz.service.ArticleService;
 import kun.uz.util.HeaderUtil;
 import kun.uz.util.JwtUtil;
@@ -115,7 +116,29 @@ public class ArticleController {
     @PutMapping("/shared/{articleId}")
     public ResponseEntity<Void> sharedCount(@PathVariable String articleId){
         articleService.sharedCount(articleId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();    }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/like/{articleId}/like")
+    public ResponseEntity<Void> like(@PathVariable String articleId,
+                                     @RequestParam Integer profileId){
+        articleService.like(articleId,profileId, LikeStatus.LIKED);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/like/{articleId}/dislike")
+    public ResponseEntity<Void> disLike(@PathVariable String articleId,
+                                        @RequestParam Integer profileId){
+        articleService.like(articleId,profileId, LikeStatus.DISLIKED);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/like/{articleId}/removed")
+    public ResponseEntity<Void> removed(@PathVariable String articleId,
+                                        @RequestParam Integer profileId){
+        articleService.like(articleId,profileId, LikeStatus.REMOVED);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
 
 

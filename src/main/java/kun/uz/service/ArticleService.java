@@ -3,7 +3,9 @@ package kun.uz.service;
 import jakarta.servlet.http.HttpServletRequest;
 import kun.uz.dto.article.*;
 import kun.uz.entity.ArticleEntity;
+import kun.uz.entity.ArticleLikeEntity;
 import kun.uz.enums.ArticleStatus;
+import kun.uz.enums.LikeStatus;
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.ArticleRepository;
 import kun.uz.util.SpringSecurityUtil;
@@ -34,6 +36,8 @@ public class ArticleService {
     private RegionService regionService;
     @Autowired
     private IpArticleService ipArticleService;
+    @Autowired
+    private ArticleLikeService articleLikeService;
 
     public ArticleCreationDTO createArticle(ArticleCreationDTO creationDTO) {
         ArticleEntity articleEntity = new ArticleEntity();
@@ -236,5 +240,10 @@ public class ArticleService {
 
     public void sharedCount(String articleId) {
         articleRepository.sharedCount(articleId);
+    }
+
+
+    public void like(String articleId, Integer profileId, LikeStatus status) {
+       articleLikeService.create(articleId,profileId,status);
     }
 }
