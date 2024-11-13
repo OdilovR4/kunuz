@@ -4,10 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import kun.uz.dto.article.*;
 import kun.uz.dto.base.JwtDTO;
 import kun.uz.service.ArticleService;
+import kun.uz.util.HeaderUtil;
 import kun.uz.util.JwtUtil;
 import lombok.Getter;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -105,10 +107,16 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getByCategory(categoryId));
     }
 
-    @GetMapping("/view-count/{articleId}")
-    public ResponseEntity<ArticleShortInfoDTO> increaseViewCount(@PathVariable String articleId, HttpServletRequest request){
-        return ResponseEntity.ok(articleService.increaseViewCount(articleId, request));
+    @GetMapping("/by-id/{articleId}")
+    public ResponseEntity<ArticleShortInfoDTO> byId(@PathVariable String articleId, HttpServletRequest request){
+        return ResponseEntity.ok(articleService.byId(articleId, HeaderUtil.getUserIP(request)));
     }
+
+    @PutMapping("/shared/{articleId}")
+    public ResponseEntity<Void> sharedCount(@PathVariable String articleId){
+        articleService.sharedCount(articleId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();    }
+
 
 
 }

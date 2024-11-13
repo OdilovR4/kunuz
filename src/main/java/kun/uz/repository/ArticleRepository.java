@@ -53,4 +53,8 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity,String>,
     Page<ArticleShortInfoMapper> getByCategory(ArticleStatus articleStatus, Integer categoryId, Pageable pageable);
 
 
+    @Modifying
+    @Transactional
+    @Query("Update ArticleEntity Set sharedCount = sharedCount + 1 where id = ?1")
+    void sharedCount(String articleId);
 }

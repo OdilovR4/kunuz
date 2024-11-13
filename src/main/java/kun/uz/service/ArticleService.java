@@ -218,10 +218,8 @@ public class ArticleService {
     }
 
 
-    public ArticleShortInfoDTO increaseViewCount(String articleId, HttpServletRequest request) {
+    public ArticleShortInfoDTO byId(String articleId, String ip) {
         ArticleEntity entity = articleRepository.getById(articleId);
-        String ip = request.getHeader("x-forwarded-for");
-
         if(!ipArticleService.isExistIp(ip, articleId)){
             entity.setViewCount(entity.getViewCount()+1);
             articleRepository.save(entity);
@@ -234,8 +232,9 @@ public class ArticleService {
         dto.setPublishedDate(entity.getPublishedDate());
 
         return dto;
+    }
 
-
-
+    public void sharedCount(String articleId) {
+        articleRepository.sharedCount(articleId);
     }
 }
