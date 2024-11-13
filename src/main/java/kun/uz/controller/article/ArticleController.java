@@ -7,6 +7,7 @@ import kun.uz.enums.LikeStatus;
 import kun.uz.service.ArticleService;
 import kun.uz.util.HeaderUtil;
 import kun.uz.util.JwtUtil;
+import kun.uz.util.SpringSecurityUtil;
 import lombok.Getter;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,25 +121,26 @@ public class ArticleController {
     }
 
     @PostMapping("/like/{articleId}/like")
-    public ResponseEntity<Void> like(@PathVariable String articleId,
-                                     @RequestParam Integer profileId){
-        articleService.like(articleId,profileId, LikeStatus.LIKED);
+    public ResponseEntity<Void> like(@PathVariable String articleId){
+
+        articleService.like(articleId, SpringSecurityUtil.getCurrentUser().getId(), LikeStatus.LIKED);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/like/{articleId}/dislike")
-    public ResponseEntity<Void> disLike(@PathVariable String articleId,
-                                        @RequestParam Integer profileId){
-        articleService.like(articleId,profileId, LikeStatus.DISLIKED);
+
+    public ResponseEntity<Void> disLike(@PathVariable String articleId){
+        articleService.like(articleId,SpringSecurityUtil.getCurrentUser().getId(), LikeStatus.DISLIKED);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PostMapping("/like/{articleId}/removed")
-    public ResponseEntity<Void> removed(@PathVariable String articleId,
-                                        @RequestParam Integer profileId){
-        articleService.like(articleId,profileId, LikeStatus.REMOVED);
+    public ResponseEntity<Void> removed(@PathVariable String articleId){
+        articleService.like(articleId,SpringSecurityUtil.getCurrentUser().getId(), LikeStatus.REMOVED);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+
 
 
 

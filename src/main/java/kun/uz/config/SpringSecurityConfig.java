@@ -50,6 +50,7 @@ public class SpringSecurityConfig {
                     .requestMatchers("/article/**").permitAll()
                     .requestMatchers("/attach/**").permitAll()
                     .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/article/like/**").authenticated()
                     .requestMatchers("/post/**").permitAll()
                     .anyRequest()
                     .authenticated();
