@@ -1,6 +1,5 @@
 package kun.uz.dto.article;
 
-import kun.uz.dto.attach.AttachDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,5 +16,6 @@ public class ArticleCreationDTO {
     private Integer regionId;
     private Integer categoryId;
     private List<Integer> articleType;
+    private List<String> tags;
 
 }

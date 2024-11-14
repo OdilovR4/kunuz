@@ -23,4 +23,7 @@ public interface CommentRepository extends CrudRepository<CommentEntity,String >
 
     @Query("from CommentEntity where articleId = ?1 and visible = true order by createdDate desc ")
     Page<CommentEntity> getByPage(String articleId, Pageable pageable);
+
+    @Query("From CommentEntity where replyId = ?1 and visible = true")
+    List<CommentEntity> getReplied(String commentId);
 }

@@ -20,8 +20,8 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    @PostMapping
-    @PreAuthorize("hasRole('MODERATOR')")
+    @PostMapping("create")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public ResponseEntity<?> create(@RequestBody ArticleCreationDTO dto){
         return ResponseEntity.ok(articleService.createArticle(dto));
     }

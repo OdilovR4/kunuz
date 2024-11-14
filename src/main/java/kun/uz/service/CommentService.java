@@ -85,6 +85,7 @@ public class CommentService {
         dto.setSurname(entity.getProfile().getSurname());
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setProfileDTO(dto);
+        commentDTO.setContent(entity.getContent());
         commentDTO.setCreatedDate(entity.getCreatedDate());
         commentDTO.setUpdatedDate(entity.getUpdateDate());
         return commentDTO;
@@ -127,4 +128,10 @@ public class CommentService {
         }
         return new PageImpl<>(commentDTOS,PageRequest.of(page,size),result.getTotal());
     }
+
+    public List<CommentDTO> getReplied(String commentId) {
+        List<CommentEntity> repliedComments = commentRepository.getReplied(commentId);
+        return repliedComments.stream().map(item -> changeToGet(item)).toList();
+    }
+
 }

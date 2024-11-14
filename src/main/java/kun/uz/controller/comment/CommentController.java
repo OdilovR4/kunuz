@@ -54,6 +54,14 @@ public class CommentController {
         return ResponseEntity.ok(commentService.filter(page,size,filter));
     }
 
+    @GetMapping("replied/{commentId}")
+    public ResponseEntity<?> getReplied(@PathVariable String commentId) {
+        return ResponseEntity.ok(commentService.getReplied(commentId));
+    }
+
+
+
+
 
 
 }

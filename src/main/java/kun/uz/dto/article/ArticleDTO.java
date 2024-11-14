@@ -32,6 +32,7 @@ public class ArticleDTO {
     private Integer moderatorId;
     private ProfileDTO publisher;
     private Integer publisherId;
+    private List<String> tags;
     private LocalDateTime createdDate;
     private LocalDateTime publishedDate;
 }

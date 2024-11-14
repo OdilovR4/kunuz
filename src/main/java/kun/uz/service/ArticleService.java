@@ -38,6 +38,8 @@ public class ArticleService {
     private IpArticleService ipArticleService;
     @Autowired
     private ArticleLikeService articleLikeService;
+    @Autowired
+    private ArticleTagService articleTagService;
 
     public ArticleCreationDTO createArticle(ArticleCreationDTO creationDTO) {
         ArticleEntity articleEntity = new ArticleEntity();
@@ -54,6 +56,7 @@ public class ArticleService {
         articleRepository.save(articleEntity);
         articleTypeArticleService.addArticleType(articleEntity.getId(), creationDTO.getArticleType());
         creationDTO.setId(articleEntity.getId());
+        articleTagService.createArticleTag(articleEntity.getId(),creationDTO.getTags());
 
         return creationDTO;
     }
@@ -93,6 +96,7 @@ public class ArticleService {
         dto.setPhoto(attachService.getDto(entity.getPhotoId()));
         dto.setArticleType(articleTypeArticleService.getArticleList(entity.getId()));
         dto.setCreatedDate(entity.getCreatedDate());
+        dto.setTags(articleTagService.getTags(id));
         return dto;
     }
 
