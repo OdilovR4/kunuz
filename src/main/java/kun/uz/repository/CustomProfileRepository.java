@@ -50,6 +50,7 @@ public class CustomProfileRepository {
             LocalDateTime toDateTime = LocalDateTime.of(filter.getTo(), LocalTime.MAX);
             params.put("to", toDateTime);
         }
+
         StringBuilder selectBuilder = new StringBuilder("From ProfileEntity as p where 1=1 ");
         selectBuilder.append(condition);
         StringBuilder countBuilder = new StringBuilder("select count(*) from ProfileEntity as p where 1=1 ");
@@ -69,9 +70,6 @@ public class CustomProfileRepository {
         long total = (long) countQuery.getSingleResult();
 
         return new FilterResultDTO<>(list,total);
-
-
-
 
     }
 }

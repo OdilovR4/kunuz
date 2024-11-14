@@ -3,10 +3,12 @@ package kun.uz.service;
 import kun.uz.dto.article.ArticleDTO;
 import kun.uz.dto.article.CommentDTO;
 import kun.uz.dto.filter.CommentFilterDTO;
+import kun.uz.dto.filter.FilterResultDTO;
 import kun.uz.dto.profile.ProfileDTO;
 import kun.uz.entity.CommentEntity;
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.CommentRepository;
+import kun.uz.repository.CustomCommentRepository;
 import kun.uz.util.SpringSecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,8 @@ import java.util.List;
 public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
+    @Autowired
+    private CustomCommentRepository customCommentRepository;
 
     public CommentDTO create(CommentDTO comment) {
         CommentEntity entity = new CommentEntity();
@@ -111,7 +115,16 @@ public class CommentService {
         return commentDTO;
     }
 
-    public Integer filter(Integer page, Integer size, CommentFilterDTO filter) {
-        return 0;
+    public Page<CommentDTO> filter(Integer page, Integer size, CommentFilterDTO filter) {
+        FilterResultDTO<CommentEntity> result = customCommentRepository.filter(page,size,filter);
+        List<CommentDTO> commentDTOS = new ArrayList<>();
+        for(CommentEntity entity : result.getContents()){
+            CommentDTO dto = (changeToDTO(entity));
+            dto.setCreatedDate(entity.getCreatedDate());
+            dto.setUpdatedDate(entity.getUpdateDate());
+            dto.setId(entity.getId());
+            commentDTOS.add(dto);
+        }
+        return new PageImpl<>(commentDTOS,PageRequest.of(page,size),result.getTotal());
     }
 }
