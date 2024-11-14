@@ -16,7 +16,7 @@ import java.util.Map;
 @Repository
 public class CustomProfileRepository {
     @Autowired
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     public FilterResultDTO<ProfileEntity> filter(int page, Integer size, FilterDTO filter) {
 

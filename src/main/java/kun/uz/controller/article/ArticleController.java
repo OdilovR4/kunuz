@@ -6,24 +6,19 @@ import kun.uz.dto.base.JwtDTO;
 import kun.uz.enums.LikeStatus;
 import kun.uz.service.ArticleService;
 import kun.uz.util.HeaderUtil;
-import kun.uz.util.JwtUtil;
 import kun.uz.util.SpringSecurityUtil;
-import lombok.Getter;
-import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/article")
 public class ArticleController {
     @Autowired
     private ArticleService articleService;
-
 
     @PostMapping
     @PreAuthorize("hasRole('MODERATOR')")

@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProfileDTO {
 
+   private Integer id;
+
    @NotBlank(message = "name is required")
    @Pattern(regexp = "^[a-zA-ZА-Яа-яЁёЎўҚқҒғҲҳ]+$", message = "name must consist of only letters")
    @Size(min = 3, max = 15, message = "the length of name must be between 3 and 15")
