@@ -16,6 +16,8 @@ import java.util.List;
 public class RegionService {
     @Autowired
     private RegionRepository regionRepository;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
     public RegionDTO createRegion(RegionDTO dto) {
         RegionEntity entity = new RegionEntity();
@@ -32,9 +34,9 @@ public class RegionService {
         return dto;
     }
 
-    public String updateRegion(Integer id, RegionDTO dto) {
+    public String updateRegion(Integer id, RegionDTO dto, String lang) {
         RegionEntity entity = regionRepository.findById(id).orElseThrow(()
-                -> new ResourceNotFoundException("Not found"));
+                -> new ResourceNotFoundException(resourceBundleService.getMessage("region.not.found", lang)));
         if(dto.getOrderNumber() != null) {
             entity.setOrderNumber(dto.getOrderNumber());
         }
@@ -101,7 +103,7 @@ public class RegionService {
 
     }
 
-    public RegionDTO getById(Integer regionId) {
-        return changeToDTO(regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException("Not found")));
+    public RegionDTO getById(Integer regionId, String lang) {
+        return changeToDTO(regionRepository.findById(regionId).orElseThrow(() -> new ResourceNotFoundException(resourceBundleService.getMessage("region.not.found", lang))));
     }
 }

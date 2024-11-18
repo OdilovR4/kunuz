@@ -19,7 +19,9 @@ import java.util.List;
 @Service
 public class ArticleTypeService {
     @Autowired
-    ArticleTypeRepository articleTypeRepository;
+    private ArticleTypeRepository articleTypeRepository;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
     public ArticleTypeDTO create(ArticleTypeDTO dto) {
         ArticleTypeEntity entity = new ArticleTypeEntity();
@@ -35,9 +37,9 @@ public class ArticleTypeService {
         return dto;
     }
 
-    public String update(Integer id, ArticleTypeDTO dto) {
+    public String update(Integer id, ArticleTypeDTO dto, String lang) {
         ArticleTypeEntity entity = articleTypeRepository.findById(id).orElseThrow(()
-                -> new ResourceNotFoundException("Post Not Found"));
+                -> new ResourceNotFoundException(resourceBundleService.getMessage("post.not.found",lang)));
 
         if(dto.getNameUz()!=null){
             entity.setNameUz(dto.getNameUz());
@@ -56,11 +58,11 @@ public class ArticleTypeService {
         return "UPDATED";
     }
 
-    public String delete(Integer id) {
+    public String delete(Integer id, String lang) {
         if(articleTypeRepository.deleteArticleType(id)==1){
             return "DELETED";
         }
-        throw new  ResourceNotFoundException("Post Not Found");
+        throw new  ResourceNotFoundException(resourceBundleService.getMessage("post.not.found",lang));
     }
 
     public PageImpl<ArticleTypeDTO> getAll(int page, int size) {
@@ -104,8 +106,8 @@ public class ArticleTypeService {
     return new PageImpl<>(changeToDTOList(entityPage.getContent()), pageable, entityPage.getTotalElements());
     }
 
-    public ArticleTypeDTO getById(Integer id) {
-        return changeToDTO(articleTypeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post Not Found")));
+    public ArticleTypeDTO getById(Integer id, String lang) {
+        return changeToDTO(articleTypeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(resourceBundleService.getMessage("post.not.found",lang))));
     }
 
 }

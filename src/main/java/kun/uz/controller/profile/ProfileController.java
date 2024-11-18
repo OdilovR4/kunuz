@@ -6,6 +6,7 @@ import kun.uz.dto.base.JwtDTO;
 import kun.uz.dto.profile.ProfileCreationDTO;
 import kun.uz.dto.profile.ProfileDTO;
 import kun.uz.dto.profile.UpdateProfileDetail;
+import kun.uz.enums.AppLanguage;
 import kun.uz.service.ProfileService;
 import kun.uz.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +24,25 @@ public class ProfileController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProfileDTO> createProfile(@Valid @RequestBody ProfileCreationDTO dto) {
-        return ResponseEntity.ok(profileService.create(dto));
+    public ResponseEntity<ProfileDTO> createProfile(@Valid @RequestBody ProfileCreationDTO dto,
+                                                    @RequestHeader(value = "Accepted-Language", defaultValue = "uz")AppLanguage language) {
+        return ResponseEntity.ok(profileService.create(dto, language.name()));
     }
 
     @PutMapping("update/by-admin/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> updateProfileByAdmin(@PathVariable Integer id,
-                                           @Valid @RequestBody ProfileCreationDTO dto) {
-        return ResponseEntity.ok(profileService.updateByAdmin(id,dto));
+                                           @Valid @RequestBody ProfileCreationDTO dto,
+                                           @RequestHeader(value = "Accepted-Language", defaultValue = "uz")AppLanguage lang) {
+        return ResponseEntity.ok(profileService.updateByAdmin(id,dto, lang.name()));
     }
 
     @PutMapping("/update/by-own")
     public ResponseEntity<?> updateProfileByOwn(@Valid @RequestBody UpdateProfileDetail dto,
-                                                @RequestHeader("Authorization") String token) {
+                                                @RequestHeader("Authorization") String token,
+                                                @RequestHeader(value = "Accepted-Language", defaultValue = "uz")AppLanguage lang) {
         JwtDTO jwtDTO = JwtUtil.decode(token);
-        return ResponseEntity.ok(profileService.updateByOwn(dto, jwtDTO.getUsername()));
+        return ResponseEntity.ok(profileService.updateByOwn(dto, jwtDTO.getUsername(),lang.name()));
     }
 
     @GetMapping("/all")

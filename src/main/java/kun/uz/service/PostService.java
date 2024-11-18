@@ -24,6 +24,8 @@ public class PostService {
     private PostRepository postRepository;
     @Autowired
     private PostAttachRepository postAttachRepository;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
 
     public PostDTO create(PostDTO postDTO) {
@@ -73,15 +75,16 @@ public class PostService {
 
     }
 
-    public Boolean update(Integer id, PostDTO postDTO) {
-        PostEntity entity = getById(id);
+    public Boolean update(Integer id, PostDTO postDTO,String lang) {
+        PostEntity entity = getById(id,lang);
         entity.setTitle(postDTO.getTitle());
         updatePhotos(entity.getId(), postDTO.getImagesId());
         return true;
     }
 
-    public PostEntity getById(Integer id) {
-        return postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+    public PostEntity getById(Integer id, String lang) {
+        return postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
+                resourceBundleService.getMessage("post.not.found",lang)));
     }
 
     private void updatePhotos(Integer postId, List<String> imagesId) {

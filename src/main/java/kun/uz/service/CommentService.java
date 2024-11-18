@@ -27,6 +27,8 @@ public class CommentService {
     private CommentRepository commentRepository;
     @Autowired
     private CustomCommentRepository customCommentRepository;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
     public CommentDTO create(CommentDTO comment) {
         CommentEntity entity = new CommentEntity();
@@ -44,12 +46,13 @@ public class CommentService {
         return comment;
     }
 
-    public CommentEntity getById(String id) {
-        return commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
+    public CommentEntity getById(String id, String lang) {
+        return commentRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(resourceBundleService.getMessage("commend.not.found", lang)));
     }
 
-    public CommentDTO update(CommentDTO comment) {
-        CommentEntity commentEntity = getById(comment.getId());
+    public CommentDTO update(CommentDTO comment, String lang) {
+        CommentEntity commentEntity = getById(comment.getId(), lang);
         commentEntity.setContent(comment.getContent());
         commentEntity.setUpdateDate(LocalDateTime.now());
         commentRepository.save(commentEntity);
@@ -67,7 +70,7 @@ public class CommentService {
     }
 
     public Boolean delete(String commentId) {
-        return commentRepository.deleteArticle(commentId)==1;
+        return commentRepository.deleteArticle(commentId) == 1;
     }
 
     public List<CommentDTO> getByArticleId(String articleId) {
@@ -78,6 +81,7 @@ public class CommentService {
         }
         return commentDTOS;
     }
+
     public CommentDTO changeToGet(CommentEntity entity) {
         ProfileDTO dto = new ProfileDTO();
         dto.setName(entity.getProfile().getName());
@@ -92,11 +96,12 @@ public class CommentService {
     }
 
     public Page<CommentDTO> getByPage(String articleId, int page, int size) {
-        Pageable pageable = PageRequest.of(page,size);
-        Page<CommentEntity> commentEntityPage = commentRepository.getByPage(articleId,pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CommentEntity> commentEntityPage = commentRepository.getByPage(articleId, pageable);
         List<CommentDTO> dtoList = commentEntityPage.stream().map(item -> changeToPage(item)).toList();
         return new PageImpl<>(dtoList, pageable, commentEntityPage.getTotalElements());
     }
+
     public CommentDTO changeToPage(CommentEntity entity) {
         ProfileDTO dto = new ProfileDTO();
         dto.setName(entity.getProfile().getName());
@@ -117,16 +122,16 @@ public class CommentService {
     }
 
     public Page<CommentDTO> filter(Integer page, Integer size, CommentFilterDTO filter) {
-        FilterResultDTO<CommentEntity> result = customCommentRepository.filter(page,size,filter);
+        FilterResultDTO<CommentEntity> result = customCommentRepository.filter(page, size, filter);
         List<CommentDTO> commentDTOS = new ArrayList<>();
-        for(CommentEntity entity : result.getContents()){
+        for (CommentEntity entity : result.getContents()) {
             CommentDTO dto = (changeToDTO(entity));
             dto.setCreatedDate(entity.getCreatedDate());
             dto.setUpdatedDate(entity.getUpdateDate());
             dto.setId(entity.getId());
             commentDTOS.add(dto);
         }
-        return new PageImpl<>(commentDTOS,PageRequest.of(page,size),result.getTotal());
+        return new PageImpl<>(commentDTOS, PageRequest.of(page, size), result.getTotal());
     }
 
     public List<CommentDTO> getReplied(String commentId) {

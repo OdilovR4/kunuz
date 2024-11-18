@@ -3,6 +3,7 @@ package kun.uz.controller.article;
 import jakarta.validation.Valid;
 import kun.uz.dto.article.ArticleTypeDTO;
 import kun.uz.dto.base.NameInterface;
+import kun.uz.enums.AppLanguage;
 import kun.uz.service.ArticleTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,14 +27,17 @@ public class ArticleTypeController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody ArticleTypeDTO dto){
-        return ResponseEntity.ok(articleTypeService.update(id,dto));
+    public ResponseEntity<?> update(@PathVariable Integer id,
+                                    @RequestBody ArticleTypeDTO dto,
+                                    @RequestHeader("Accept-Language") AppLanguage lang){
+        return ResponseEntity.ok(articleTypeService.update(id,dto,lang.name()));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> delete(@PathVariable Integer id){
-        return ResponseEntity.ok(articleTypeService.delete(id));
+    public ResponseEntity<String> delete(@PathVariable Integer id,
+                                         @RequestHeader("Accept-Language") AppLanguage lang){
+        return ResponseEntity.ok(articleTypeService.delete(id,lang.name()));
     }
 
     @GetMapping("/list")

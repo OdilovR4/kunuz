@@ -1,15 +1,14 @@
 package kun.uz.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import kun.uz.dto.article.*;
 import kun.uz.entity.ArticleEntity;
-import kun.uz.entity.ArticleLikeEntity;
 import kun.uz.enums.ArticleStatus;
 import kun.uz.enums.LikeStatus;
 import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.ArticleRepository;
 import kun.uz.util.SpringSecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +39,10 @@ public class ArticleService {
     private ArticleLikeService articleLikeService;
     @Autowired
     private ArticleTagService articleTagService;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
+    @Value("${server.domain}")
+    private String domainName;
 
     public ArticleCreationDTO createArticle(ArticleCreationDTO creationDTO) {
         ArticleEntity articleEntity = new ArticleEntity();
@@ -61,10 +64,10 @@ public class ArticleService {
         return creationDTO;
     }
 
-    public boolean update(String id, UpdateArticleDTO dto) {
+    public boolean update(String id, UpdateArticleDTO dto, String lang) {
         ArticleEntity article = articleRepository.getById(id);
         if (article == null) {
-            throw new ResourceNotFoundException("Article Not Found");
+            throw new ResourceNotFoundException(resourceBundleService.getMessage("article.not.found", lang));
         }
         article.setTitle(dto.getTitle());
         article.setContent(dto.getContent());
@@ -77,10 +80,10 @@ public class ArticleService {
         return true;
     }
 
-    public ArticleDTO getById(String id) {
+    public ArticleDTO getById(String id, String lang) {
         ArticleEntity entity = articleRepository.getById(id);
         if (entity == null) {
-            throw new ResourceNotFoundException("Article Not Found");
+            throw new ResourceNotFoundException(resourceBundleService.getMessage("article.not.found",lang));
         }
 
         ArticleDTO dto = new ArticleDTO();
@@ -90,11 +93,11 @@ public class ArticleService {
         dto.setDescription(entity.getDescription());
         dto.setSharedCount(entity.getSharedCount());
         dto.setViewCount(entity.getViewCount());
-        dto.setCategory(categoryService.getById(entity.getCategoryId()));
-        dto.setRegion(regionService.getById(entity.getRegionId()));
-        dto.setModerator(profileService.getProfile(entity.getModeratorId()));
+        dto.setCategory(categoryService.getById(entity.getCategoryId(),lang));
+        dto.setRegion(regionService.getById(entity.getRegionId(),lang));
+        dto.setModerator(profileService.getProfile(entity.getModeratorId(),lang));
         dto.setPhoto(attachService.getDto(entity.getPhotoId()));
-        dto.setArticleType(articleTypeArticleService.getArticleList(entity.getId()));
+        dto.setArticleType(articleTypeArticleService.getArticleList(entity.getId(),lang));
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setTags(articleTagService.getTags(id));
         return dto;
@@ -104,10 +107,10 @@ public class ArticleService {
         return articleRepository.deleteArticle(id) == 1;
     }
 
-    public Boolean changeStatus(String id) {
+    public Boolean changeStatus(String id, String lang) {
         ArticleEntity article = articleRepository.getById(id);
         if (article == null) {
-            throw new ResourceNotFoundException("Article Not Found");
+            throw new ResourceNotFoundException(resourceBundleService.getMessage("article.not.found",lang));
         }
         article.setStatus(ArticleStatus.PUBLISHED);
         article.setPublishedDate(LocalDateTime.now());
@@ -152,7 +155,7 @@ public class ArticleService {
     }
 
 
-    public ArticleDTO changeToDTO(ArticleEntity entity) {
+    public ArticleDTO changeToDTO(ArticleEntity entity,String lang) {
         ArticleDTO dto = new ArticleDTO();
         dto.setId(entity.getId());
         dto.setTitle(entity.getTitle());
@@ -161,7 +164,7 @@ public class ArticleService {
         dto.setSharedCount(entity.getSharedCount());
         dto.setViewCount(entity.getViewCount());
         dto.setCategoryId(entity.getCategoryId());
-        dto.setRegion(regionService.getById(entity.getRegionId()));
+        dto.setRegion(regionService.getById(entity.getRegionId(),lang));
         dto.setPhoto(attachService.getDto(entity.getPhotoId()));
         dto.setPublishedDate(entity.getCreatedDate());
         return dto;

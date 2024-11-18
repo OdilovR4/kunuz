@@ -1,7 +1,6 @@
-package kun.uz.controller.attach;
+package kun.uz.entity;
 
 import jakarta.persistence.*;
-import kun.uz.entity.ArticleEntity;
 import lombok.Getter;
 import lombok.Setter;
 

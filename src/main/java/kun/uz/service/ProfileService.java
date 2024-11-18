@@ -34,13 +34,14 @@ public class ProfileService {
 
     @Autowired
     private CustomProfileRepository profileCustomRepository;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
-    public ProfileDTO create(ProfileCreationDTO dto) {
+    public ProfileDTO create(ProfileCreationDTO dto, String lang) {
         ProfileEntity entity = profileRepository.getByUsername(dto.getUsername());
         if (entity != null) {
-            throw new ResourceNotFoundException("Profile already exist");
+            throw new ResourceNotFoundException(resourceBundleService.getMessage("username.in.use",lang));
         }
-       // jwtValidator(jwtToken);
         ProfileEntity profile = new ProfileEntity();
         profile.setUsername(dto.getUsername());
         profile.setName(dto.getName());
@@ -68,8 +69,8 @@ public class ProfileService {
 //        }
 //    }
 
-    public boolean updateByAdmin(Integer id, @Valid ProfileCreationDTO profile) {
-        ProfileEntity entity = getById(id);
+    public boolean updateByAdmin(Integer id, @Valid ProfileCreationDTO profile, String lang) {
+        ProfileEntity entity = getById(id, lang);
         entity.setName(profile.getName());
         entity.setUsername(profile.getUsername());
         entity.setSurname(profile.getSurname());
@@ -89,8 +90,9 @@ public class ProfileService {
         return new PageImpl<>(dtoList, pagination, entityList.getTotalElements());
     }
 
-    public ProfileEntity getById(Integer id) {
-        return profileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Profile not found"));
+    public ProfileEntity getById(Integer id, String lang) {
+        return profileRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(resourceBundleService.getMessage("user.not.found",lang)));
 
     }
 
@@ -122,28 +124,28 @@ public class ProfileService {
         return new PageImpl<>(dtoList, PageRequest.of(page, size), result.getTotal());
     }
 
-    public Boolean updateByOwn(@Valid UpdateProfileDetail dto, String username) {
-        ProfileEntity entity = getByUsername(username);
+    public Boolean updateByOwn(@Valid UpdateProfileDetail dto, String username, String lang) {
+        ProfileEntity entity = getByUsername(username,lang);
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
         if(entity.getPhotoId()!=null){
-            attachService.delete(entity.getPhotoId());
+            attachService.delete(entity.getPhotoId(),lang);
         }
         entity.setPhotoId(dto.getPhotoId());
         profileRepository.save(entity);
         return true;
     }
 
-    public ProfileEntity getByUsername(String username) {
+    public ProfileEntity getByUsername(String username, String lang) {
         ProfileEntity entity = profileRepository.findByUsername(username);
         if (entity == null) {
-            throw new ResourceNotFoundException("Profile not found");
+            throw new ResourceNotFoundException(resourceBundleService.getMessage("user.not.found",lang));
         }
         return entity;
     }
 
-    public ProfileDTO getProfile(Integer profileId) {
-        ProfileEntity entity = getById(profileId);
+    public ProfileDTO getProfile(Integer profileId, String lang) {
+        ProfileEntity entity = getById(profileId,lang);
         ProfileDTO dto = new ProfileDTO();
         dto.setName(entity.getName());
         dto.setSurname(entity.getSurname());

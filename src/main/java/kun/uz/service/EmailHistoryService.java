@@ -21,42 +21,42 @@ public class EmailHistoryService {
     @Autowired
     private EmailHistoryRepository emailHistoryRepository;
 
-    public void addEmailHistory(EmailHistoryDTO dto){
+    public void addEmailHistory(String email, String title, LocalDateTime requestTime){
         EmailHistoryEntity entity = new EmailHistoryEntity();
-        entity.setEmail(dto.getEmail());
-        entity.setMessage(dto.getMessage());
-        entity.setCreatedDate(dto.getCreatedDate());
+        entity.setEmail(email);
+        entity.setMessage(title);
+        entity.setCreatedDate(requestTime);
         emailHistoryRepository.save(entity);
     }
 
-    public List<EmailHistoryDTO> getHistoryByEmail(String email){
+    public List<EmailHistoryDTO> getHistoryByEmail(String email) {
         List<EmailHistoryEntity> entityList = emailHistoryRepository.findAllByEmail(email);
         List<EmailHistoryDTO> dtoList = new ArrayList<>();
-        for(EmailHistoryEntity entity : entityList){
+        for (EmailHistoryEntity entity : entityList) {
             dtoList.add(changeToDTO(entity));
         }
         return dtoList;
     }
 
-    public List<EmailHistoryDTO> getHistoryByGivenDate(LocalDate date){
+    public List<EmailHistoryDTO> getHistoryByGivenDate(LocalDate date) {
         LocalDateTime from = LocalDateTime.of(date, LocalTime.MIN);
         LocalDateTime to = LocalDateTime.of(date, LocalTime.MAX);
-        List<EmailHistoryEntity> entityList = emailHistoryRepository.getByGivenDate(from,to);
+        List<EmailHistoryEntity> entityList = emailHistoryRepository.getByGivenDate(from, to);
         List<EmailHistoryDTO> dtoList = new ArrayList<>();
-        for(EmailHistoryEntity entity : entityList){
+        for (EmailHistoryEntity entity : entityList) {
             dtoList.add(changeToDTO(entity));
         }
         return dtoList;
     }
 
-    public PageImpl<EmailHistoryDTO> getHistoryByPagination(Integer page, Integer size){
-     Pageable pageable = PageRequest.of(page, size);
-     Page<EmailHistoryEntity> pageList = emailHistoryRepository.getByPagination(pageable);
-     List<EmailHistoryDTO> dtoList = new ArrayList<>();
-     for(EmailHistoryEntity entity : pageList.getContent()){
-         dtoList.add(changeToDTO(entity));
-     }
-     return new PageImpl<>(dtoList, pageable, pageList.getTotalElements());
+    public PageImpl<EmailHistoryDTO> getHistoryByPagination(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<EmailHistoryEntity> pageList = emailHistoryRepository.getByPagination(pageable);
+        List<EmailHistoryDTO> dtoList = new ArrayList<>();
+        for (EmailHistoryEntity entity : pageList.getContent()) {
+            dtoList.add(changeToDTO(entity));
+        }
+        return new PageImpl<>(dtoList, pageable, pageList.getTotalElements());
     }
 
     private EmailHistoryDTO changeToDTO(EmailHistoryEntity entity) {

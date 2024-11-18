@@ -11,6 +11,7 @@ import kun.uz.enums.ProfileRole;
 import kun.uz.enums.ProfileStatus;
 import kun.uz.enums.SmsStatus;
 import kun.uz.exceptions.AppBadRequestException;
+import kun.uz.exceptions.ResourceNotFoundException;
 import kun.uz.repository.ProfileRepository;
 import kun.uz.repository.SmsHistoryRepository;
 import kun.uz.repository.TokenRepository;
@@ -20,6 +21,7 @@ import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.RefreshFailedException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,11 +35,13 @@ public class SmsService {
     private SmsHistoryRepository smsHistoryRepository;
     @Autowired
     private ProfileRepository profileRepository;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
-    public String sendRegistrationSms(String phoneNumber) {
+    public String sendRegistrationSms(String phoneNumber, String lang) {
         int code = RandomUtil.getRandomInt(5);
         String message = "This is test from Eskiz"; //+code qilib , code ni ham qushib berish kerak edi
-        saveSmsHistory(phoneNumber, message, code);
+        saveSmsHistory(phoneNumber, message, code,lang);
         sendSms(phoneNumber, message);
         return "confirmation code was sent to " + phoneNumber;
     }
@@ -66,10 +70,10 @@ public class SmsService {
 
     }
 
-    private void saveSmsHistory(String phone, String message, Integer code) {
+    private void saveSmsHistory(String phone, String message, Integer code, String lang) {
         Long count = smsHistoryRepository.getCountSms(phone, LocalDateTime.now().minusMinutes(1), LocalDateTime.now());
         if (count >= 3) {
-            throw new AppBadRequestException("You can not send more than 3 sms in one minute ");
+            throw new AppBadRequestException(resourceBundleService.getMessage("not.sent.more.sms", lang));
         }
 
         SmsHistoryEntity historyEntity = new SmsHistoryEntity();
@@ -134,7 +138,7 @@ public class SmsService {
         }
     }
 
-    public String createByPhone(RegistrationDTO dto) {
+    public String createByPhone(RegistrationDTO dto,String lang) {
         ProfileEntity entity = new ProfileEntity();
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
@@ -144,35 +148,37 @@ public class SmsService {
         entity.setStatus(ProfileStatus.IN_REGISTRATION);
         entity.setCreatedDate(LocalDateTime.now());
         profileRepository.save(entity);
-        return sendRegistrationSms(entity.getUsername());
+        return sendRegistrationSms(entity.getUsername(),lang);
     }
 
-    public String smsConfirm(SmsConfirmDTO dto, LocalDateTime clickTime) {
+    public String smsConfirm(SmsConfirmDTO dto, LocalDateTime clickTime,String lang) {
         ProfileEntity entity = profileRepository.findByUsername(dto.getPhone());
         if (entity == null) {
-            return "Number not found";
+            throw new ResourceNotFoundException(resourceBundleService.getMessage("phone.not.found",lang));
         }
         if (entity.getStatus() != ProfileStatus.IN_REGISTRATION) {
-            return "Your status is not in registration";
+            throw new ResourceNotFoundException(resourceBundleService.getMessage("status.not.registration",lang));
+
+
         }
-        return check(dto, clickTime);
+        return check(dto, clickTime, lang);
     }
 
-    public String check(SmsConfirmDTO dto, LocalDateTime clickTime) {
+    public String check(SmsConfirmDTO dto, LocalDateTime clickTime, String lang) {
         SmsHistoryEntity entity = smsHistoryRepository.getByPhone(dto.getPhone()).get(0);
         if (entity == null) {
-            throw new AppBadRequestException("Sms not sent to " + dto.getPhone());
+            throw new AppBadRequestException(resourceBundleService.getMessage("not.sent",lang) + dto.getPhone());
         }
         if (entity.getAttemptCount() >= 3) {
-            throw new AppBadRequestException("Your limits are up");
+            throw new AppBadRequestException(resourceBundleService.getMessage("limit.over", lang));
         }
         if (!(entity.getSmsCode().equals(dto.getCode()))) {
             smsHistoryRepository.increaseAttempt(entity.getId());
-            throw new AppBadRequestException("Sms code is incorrect");
+            throw new AppBadRequestException(resourceBundleService.getMessage("code.incorrect", lang));
         }
 
         if (clickTime.minusMinutes(3).isAfter(entity.getSendTime())) {
-            throw new AppBadRequestException("Time is up to confirm code ");
+            throw new AppBadRequestException(resourceBundleService.getMessage("time.over", lang));
         }
         entity.setStatus(SmsStatus.USED);
         ProfileEntity entity1 = profileRepository.findByUsername(dto.getPhone());

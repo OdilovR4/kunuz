@@ -1,6 +1,6 @@
 package kun.uz.repository;
 
-import kun.uz.controller.attach.IpArticleEntity;
+import kun.uz.entity.IpArticleEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

@@ -3,10 +3,8 @@ package kun.uz.service;
 import kun.uz.dto.attach.AttachDTO;
 import kun.uz.entity.AttachEntity;
 import kun.uz.repository.AttachRepository;
-import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -36,6 +33,8 @@ public class AttachService {
     private String folderName = "attaches";
     @Value("${server.domain}")
     private String domainName;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
 //    public String saveToService(MultipartFile file) {
 //        File folder = new File("attaches");
@@ -55,14 +54,14 @@ public class AttachService {
 //
 //    }
 
-    public ResponseEntity<Resource> open(String id) {
-        AttachEntity entity = getById(id);
+    public ResponseEntity<Resource> open(String id, String lang) {
+        AttachEntity entity = getById(id,lang);
         Path filePath = Paths.get(folderName + "/" + entity.getPath() + "/" + entity.getId()).normalize();
         Resource resource = null;
         try {
             resource = new UrlResource(filePath.toUri());
             if (!resource.exists()) {
-                throw new RuntimeException("File not found: " + id);
+                throw new RuntimeException(resourceBundleService.getMessage("file.not.found",lang) + id);
             }
             String contentType = Files.probeContentType(filePath);
             if (contentType == null) {
@@ -80,7 +79,7 @@ public class AttachService {
     }
 
 
-    public AttachDTO upload(MultipartFile file) {
+    public AttachDTO upload(MultipartFile file, String lang) {
         String pathFolder = getYmDString();
         String key = UUID.randomUUID().toString();
         String extension = getExtension(file.getOriginalFilename());
@@ -107,13 +106,13 @@ public class AttachService {
 
             return toDTO(attachEntity);
         } catch (IOException e) {
-            throw new RuntimeException("File not found: " + file.getOriginalFilename());
+            throw new RuntimeException(resourceBundleService.getMessage("file.not.found",lang)  + file.getOriginalFilename());
         }
 
     }
 
-    public ResponseEntity<Resource> download(String id) {
-        AttachEntity entity = getById(id);
+    public ResponseEntity<Resource> download(String id,String lang) {
+        AttachEntity entity = getById(id,lang);
         Path path = Paths.get(folderName + "/" + entity.getPath() + "/" + entity.getId()).normalize();
         try {
             Resource resource = new UrlResource(path.toUri());
@@ -153,8 +152,9 @@ public class AttachService {
         return attachDTO;
     }
 
-    private AttachEntity getById(String id) {
-        return attachRepository.findByIdAndVisibleTrue(id).orElseThrow(() -> new RuntimeException("File not found: " + id));
+    private AttachEntity getById(String id, String lang) {
+        return attachRepository.findByIdAndVisibleTrue(id).orElseThrow(() ->
+                new RuntimeException(resourceBundleService.getMessage("file.not.found",lang) + id));
     }
 
 
@@ -168,8 +168,8 @@ public class AttachService {
         return new PageImpl<>(dtoList, pageable, entityPage.getTotalPages());
     }
 
-    public String delete(String id) {
-        AttachEntity entity = getById(id);
+    public String delete(String id,String lang) {
+        AttachEntity entity = getById(id,lang);
         attachRepository.delete(entity);
         return "Successfully deleted";
     }

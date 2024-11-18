@@ -1,6 +1,7 @@
 package kun.uz.controller.post;
 
 import kun.uz.dto.post.PostDTO;
+import kun.uz.enums.AppLanguage;
 import kun.uz.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,8 +36,10 @@ public class PostController {
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> update (@PathVariable Integer id, @RequestBody PostDTO postDTO) {
-        return ResponseEntity.ok(postService.update(id,postDTO));
+    public ResponseEntity<?> update (@PathVariable Integer id,
+                                     @RequestBody PostDTO postDTO,
+                                     @RequestHeader("Accepted-Language") AppLanguage language) {
+        return ResponseEntity.ok(postService.update(id,postDTO, language.name()));
     }
 
 

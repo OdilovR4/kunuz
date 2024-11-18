@@ -16,7 +16,9 @@ import java.util.List;
 @Service
 public class CategoryService {
     @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
     public CategoryDTO create(CategoryDTO dto) {
         CategoryEntity entity = new CategoryEntity();
@@ -34,7 +36,7 @@ public class CategoryService {
 
     public String updateCategory(Integer id, CategoryDTO dto) {
         CategoryEntity entity = categoryRepository.findById(id).orElseThrow(
-                ()-> new ResourceNotFoundException("Not found"));
+                ()-> new ResourceNotFoundException(resourceBundleService.getMessage("file.not.found ", dto.getNameEn())));
         if(dto.getOrderNumber()!=null){
             entity.setOrderNumber(dto.getOrderNumber());
         }
@@ -87,7 +89,8 @@ public class CategoryService {
         return dto;
     }
 
-    public CategoryDTO getById(Integer categoryID) {
-        return changeToDTO(categoryRepository.findById(categoryID).orElseThrow(() -> new ResourceNotFoundException("Not found")));
+    public CategoryDTO getById(Integer categoryID, String lang) {
+        return changeToDTO(categoryRepository.findById(categoryID).orElseThrow(() ->
+                new ResourceNotFoundException(resourceBundleService.getMessage("file.not.found ", lang))));
     }
 }

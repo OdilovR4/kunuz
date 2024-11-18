@@ -8,12 +8,9 @@ import kun.uz.entity.ProfileEntity;
 import kun.uz.enums.ProfileStatus;
 import kun.uz.exceptions.AppBadRequestException;
 import kun.uz.repository.ProfileRepository;
-import kun.uz.util.BCryptUtil;
 import kun.uz.util.JwtUtil;
 import kun.uz.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,61 +25,53 @@ public class AuthService {
     EmailService emailService;
     @Autowired
     private AttachService attachService;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
-
-
-    public String registration(RegistrationDTO dto) {
+    public String registration(RegistrationDTO dto, String lang) {
         ProfileEntity usernameEntity = profileRepository.getByUsername(dto.getUsername());
 
         if (usernameEntity != null) {
             switch (usernameEntity.getStatus()) {
-                case ACTIVE -> throw new AppBadRequestException("This username already in use");
-                case BLOCKED -> throw new AppBadRequestException("This username is blocked");
+                case ACTIVE -> throw new AppBadRequestException(resourceBundleService.getMessage("username.in.use",lang));
+                case BLOCKED -> throw new AppBadRequestException(resourceBundleService.getMessage("username.blocked",lang));
                 case IN_REGISTRATION -> {
                     if (dto.getUsername().endsWith("@gmail.com")) {
-                        return emailService.sendToEmail(usernameEntity.getId(), dto.getUsername());
+                        return emailService.sendToEmail(usernameEntity.getId(), dto.getUsername(),lang);
                     } else {
-                        return smsService.sendRegistrationSms(dto.getUsername());
+                        return smsService.sendRegistrationSms(dto.getUsername(),lang);
                     }
                 }
             }
         }
 
         if (dto.getUsername().endsWith("@gmail.com")) {
-            return emailService.createByEmail(dto);
+            return emailService.createByEmail(dto,lang);
         } else {
-            return smsService.createByPhone(dto);
+            return smsService.createByPhone(dto,lang);
         }
     }
 
 
 
-    public String emailConfirm(Integer id, LocalDateTime clickTime) {
-        return emailService.emailConfirm(id, clickTime);
+    public String emailConfirm(Integer id, LocalDateTime clickTime,String lang) {
+        return emailService.emailConfirm(id, clickTime,lang);
     }
 
-    public String smsConfirm(SmsConfirmDTO dto, LocalDateTime clickTime) {
-        return smsService.smsConfirm(dto, clickTime);
-        // 1. findByPhone()
-        // 2. check IN_REGISTRATION
-
-        // check()
-        // 3. check code is correct
-        // 4. sms expiredTime
-        // 5. attempt count  (10,000 - 99,999)
-        // change status and update
+    public String smsConfirm(SmsConfirmDTO dto, LocalDateTime clickTime, String lang) {
+        return smsService.smsConfirm(dto, clickTime,lang);
     }
 
-    public ProfileDTO login(AuthDTO dto){
+    public ProfileDTO login(AuthDTO dto, String lang) {
         ProfileEntity entity = profileRepository.getByUsername(dto.getUsername());
         if(entity==null) {
-            throw new AppBadRequestException("Invalid username or password 1");
+            throw new AppBadRequestException(resourceBundleService.getMessage("email.password.wrong", lang));
         }
         if(!entity.getPassword().equals(MD5Util.md5(dto.getPassword()))) {
-            throw new AppBadRequestException("Invalid username or password 2");
+            throw new AppBadRequestException(resourceBundleService.getMessage("email.password.wrong", lang));
         }
         if(!entity.getStatus().equals(ProfileStatus.ACTIVE)) {
-            throw new AppBadRequestException("User is not active");
+            throw new AppBadRequestException(resourceBundleService.getMessage("not.active", lang));
         }
 
         ProfileDTO profileDTO = new ProfileDTO();
@@ -92,15 +81,6 @@ public class AuthService {
         profileDTO.setSurname(entity.getSurname());
         profileDTO.setJwtToken(JwtUtil.encode(entity.getUsername(),entity.getRole().toString()));
         profileDTO.setPhoto(attachService.getDto(entity.getPhotoId()));
-
-        // 1. findByPhone()
-        // 2. check IN_REGISTRATION
-
-        // check()
-        // 3. check code is correct
-        // 4. sms expiredTime
-        // 5. attempt count  (10,000 - 99,999)
-        // change status and update
 
         return profileDTO;
     }

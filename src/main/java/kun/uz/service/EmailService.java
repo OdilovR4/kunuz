@@ -5,10 +5,12 @@ import kun.uz.entity.EmailHistoryEntity;
 import kun.uz.entity.ProfileEntity;
 import kun.uz.enums.ProfileRole;
 import kun.uz.enums.ProfileStatus;
+import kun.uz.exceptions.AppBadRequestException;
 import kun.uz.repository.EmailHistoryRepository;
 import kun.uz.repository.ProfileRepository;
 import kun.uz.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,8 +24,14 @@ public class EmailService {
     private SendingService sendingService;
     @Autowired
     private EmailHistoryRepository emailHistoryRepository;
+    @Autowired
+    private EmailHistoryService emailHistoryService;
+    @Value("${server.domain}")
+    private String domainName;
+    @Autowired
+    private ResourceBundleService resourceBundleService;
 
-    public String createByEmail(RegistrationDTO dto) {
+    public String createByEmail(RegistrationDTO dto, String lang) {
         ProfileEntity entity = new ProfileEntity();
         entity.setName(dto.getName());
         entity.setUsername(dto.getUsername());
@@ -33,44 +41,31 @@ public class EmailService {
         entity.setStatus(ProfileStatus.IN_REGISTRATION);
         entity.setCreatedDate(LocalDateTime.now());
         profileRepository.save(entity);
-        return sendToEmail(entity.getId(), dto.getUsername());
+        return sendToEmail(entity.getId(), dto.getUsername(), lang);
     }
 
-    public String sendToEmail(Integer id, String email){
-        String emailContent = "<html><body>" +
-                "<p>Click below to confirm your registration:</p>" +
-                "<a href=\"http://localhost:8080/auth/registration/confirm/" + id + "\" " +
-                "style=\"display: inline-block; padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; border: 1px solid #007bff;\">Confirm</a>" +
-                "</body></html>";
+    public String sendToEmail(Integer id, String email, String lang) {
         String title = "Kecha Barca yevordiku Realni jigarr";
-        // xozircha title ni yuborib turamiz chunki bizda contentnimiz url va button ostida
-        if(sendingService.sendSimpleMessage(email, title, emailContent)){
-            emailHistoryDto(email,title,LocalDateTime.now());
-            return "Confirmation code was sent to "+email;
+        if (sendingService.sendSimpleMessage(email, title, getConfirmationButton(id))) {
+            emailHistoryService.addEmailHistory(email, title, LocalDateTime.now());
+            return "Confirmation code was sent to " + email;
         }
 
-        return "You can not send more than 3 email in one minutes ";
+        throw new AppBadRequestException(resourceBundleService.getMessage("not.sent.more.email", lang));
 
     }
-    public void emailHistoryDto(String email, String title, LocalDateTime requestTime){
-        EmailHistoryEntity entity = new EmailHistoryEntity();
-        entity.setEmail(email);
-        entity.setMessage(title);
-        entity.setCreatedDate(requestTime);
-        emailHistoryRepository.save(entity);
-    }
 
-    public String emailConfirm(Integer id, LocalDateTime clickTime) {
+    public String emailConfirm(Integer id, LocalDateTime clickTime, String lang) {
         ProfileEntity entity = profileRepository.findById(id).get();
-        if(entity.getStatus()!= ProfileStatus.IN_REGISTRATION){
-            return "Your status is not in registration";
+        if (entity.getStatus() != ProfileStatus.IN_REGISTRATION) {
+            throw new AppBadRequestException(resourceBundleService.getMessage("status.not.registration", lang));
         }
 
         List<EmailHistoryEntity> emailHistoryEntity = emailHistoryRepository.getLastSentEmail(entity.getUsername());
         LocalDateTime sentDate = emailHistoryEntity.get(0).getCreatedDate();
 
-        if(clickTime.minusSeconds(20).isAfter(sentDate)){
-            return "Time was over to confirm your registration";
+        if (clickTime.minusSeconds(120).isAfter(sentDate)) {
+            throw new AppBadRequestException(resourceBundleService.getMessage("time.over", lang));
         }
 
         entity.setStatus(ProfileStatus.ACTIVE);
@@ -78,5 +73,15 @@ public class EmailService {
         profileRepository.updateSome(entity);
 
         return "Registration successfully completed";
+    }
+
+    public String getConfirmationButton(Integer id) {
+        return "<html><body>" +
+                "<p>Click below to confirm your registration:</p>" +
+                "<a href=\"" + domainName + "/auth/registration/confirm/" + id + "\" " +
+                "style=\"display: inline-block; padding: 10px 20px; font-size: 16px; background-color:" +
+                " #007bff; color: white; text-decoration: none; border-radius: 5px; border: " +
+                "1px solid #007bff;\">Confirm</a> </body></html>";
+
     }
 }

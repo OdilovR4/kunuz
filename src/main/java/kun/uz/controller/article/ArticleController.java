@@ -2,7 +2,7 @@ package kun.uz.controller.article;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kun.uz.dto.article.*;
-import kun.uz.dto.base.JwtDTO;
+import kun.uz.enums.AppLanguage;
 import kun.uz.enums.LikeStatus;
 import kun.uz.service.ArticleService;
 import kun.uz.util.HeaderUtil;
@@ -29,14 +29,16 @@ public class ArticleController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<?> update(@PathVariable String id,
-                                    @RequestBody UpdateArticleDTO dto){
-        return ResponseEntity.ok(articleService.update(id,dto));
+                                    @RequestBody UpdateArticleDTO dto,
+                                    @RequestHeader(value = "Accepted-Language", defaultValue = "uz") AppLanguage lang){
+        return ResponseEntity.ok(articleService.update(id,dto,lang.name()));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<?> getById(@PathVariable String id){
-        return ResponseEntity.ok(articleService.getById(id));
+    public ResponseEntity<?> getById(@PathVariable String id,
+                                     @RequestHeader(value = "Accepted-Language", defaultValue = "uz") AppLanguage lang){
+        return ResponseEntity.ok(articleService.getById(id,lang.name()));
     }
 
     @PutMapping("/delete/{id}")
@@ -47,8 +49,9 @@ public class ArticleController {
 
     @PutMapping("/change-status/{id}")
     @PreAuthorize("hasRole('PUBLISHER')")
-    public ResponseEntity<?> changeStatus(@PathVariable String id){
-        return ResponseEntity.ok(articleService.changeStatus(id));
+    public ResponseEntity<?> changeStatus(@PathVariable String id,
+                                          @RequestHeader(value = "Accepted-Language", defaultValue = "uz") AppLanguage lang){
+        return ResponseEntity.ok(articleService.changeStatus(id, lang.name()));
     }
 
     @GetMapping("/get-last/{id}")

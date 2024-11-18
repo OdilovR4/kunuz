@@ -5,6 +5,7 @@ import kun.uz.dto.profile.AuthDTO;
 import kun.uz.dto.profile.ProfileDTO;
 import kun.uz.dto.profile.RegistrationDTO;
 import kun.uz.dto.profile.SmsConfirmDTO;
+import kun.uz.enums.AppLanguage;
 import kun.uz.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,23 +20,27 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/registration")
-    public ResponseEntity<String> registration(@RequestBody RegistrationDTO dto) {
-        return ResponseEntity.ok(authService.registration(dto));
+    public ResponseEntity<String> registration(@RequestBody RegistrationDTO dto,
+                                               @RequestHeader(value = "Accept-language", defaultValue = "uz") AppLanguage lang) {
+        return ResponseEntity.ok(authService.registration(dto, lang.name()));
     }
 
     @GetMapping("/registration/confirm/{id}")
-    public ResponseEntity<String> registrationEmailConfirm(@PathVariable Integer id) {
-        return ResponseEntity.ok(authService.emailConfirm(id, LocalDateTime.now()));
+    public ResponseEntity<String> registrationEmailConfirm(@PathVariable Integer id,
+                                                           @RequestHeader(value = "Accept-language", defaultValue = "uz") AppLanguage lang) {
+        return ResponseEntity.ok(authService.emailConfirm(id, LocalDateTime.now(),lang.name()));
     }
 
     @PostMapping("/registration/confirm/sms")
-    public ResponseEntity<String> registrationSmsConfirm(@RequestBody SmsConfirmDTO dto) {
-        return ResponseEntity.ok(authService.smsConfirm(dto, LocalDateTime.now()));
+    public ResponseEntity<String> registrationSmsConfirm(@RequestBody SmsConfirmDTO dto,
+                                                         @RequestHeader(value = "Accept-language", defaultValue = "uz") AppLanguage lang) {
+        return ResponseEntity.ok(authService.smsConfirm(dto, LocalDateTime.now(),lang.name()));
 
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ProfileDTO> login(@RequestBody @Valid AuthDTO dto) {
-        return ResponseEntity.ok(authService.login(dto));
+    public ResponseEntity<ProfileDTO> login(@RequestBody @Valid AuthDTO dto,
+                                            @RequestHeader(value = "Accept-language", defaultValue = "uz") AppLanguage lang) {
+        return ResponseEntity.ok(authService.login(dto, lang.name()));
     }
 }

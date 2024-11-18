@@ -33,11 +33,11 @@ public class ArticleTypeArticleService {
 
     }
 
-    public List<ArticleTypeDTO> getArticleList(String id) {
+    public List<ArticleTypeDTO> getArticleList(String id,String lang) {
         List<Integer> articleTypeId = articleTypeArticleRepository.getTypes(id);
         List<ArticleTypeDTO> articleTypeDTOList = new ArrayList<>();
         for (Integer i : articleTypeId) {
-            articleTypeDTOList.add(articleTypeService.getById(i));
+            articleTypeDTOList.add(articleTypeService.getById(i,lang));
         }
         return articleTypeDTOList;
     }

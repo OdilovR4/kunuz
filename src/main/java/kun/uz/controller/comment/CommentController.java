@@ -2,6 +2,7 @@ package kun.uz.controller.comment;
 
 import kun.uz.dto.article.CommentDTO;
 import kun.uz.dto.filter.CommentFilterDTO;
+import kun.uz.enums.AppLanguage;
 import kun.uz.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +21,9 @@ public class CommentController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> update(@RequestBody CommentDTO comment) {
-        return ResponseEntity.ok(commentService.update(comment));
+    public ResponseEntity<?> update(@RequestBody CommentDTO comment,
+                                    @RequestHeader(value = "Accepted-Language", defaultValue = "uz") AppLanguage language) {
+        return ResponseEntity.ok(commentService.update(comment, language.name()));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

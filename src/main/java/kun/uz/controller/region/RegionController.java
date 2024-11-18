@@ -1,6 +1,7 @@
 package kun.uz.controller.region;
 
 import kun.uz.dto.region.RegionDTO;
+import kun.uz.enums.AppLanguage;
 import kun.uz.service.RegionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,10 @@ public class RegionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateRegion(@PathVariable Integer id, @RequestBody RegionDTO region) {
-        return ResponseEntity.ok(regionService.updateRegion(id,region));
+    public ResponseEntity<?> updateRegion(@PathVariable Integer id,
+                                          @RequestBody RegionDTO region,
+                                          @RequestHeader(value = "Accepted-Language", defaultValue = "uz") AppLanguage lang) {
+        return ResponseEntity.ok(regionService.updateRegion(id,region, lang.name()));
     }
 
     @DeleteMapping("/{id}")
