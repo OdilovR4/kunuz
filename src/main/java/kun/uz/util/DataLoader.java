@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Component
 public class DataLoader implements CommandLineRunner {
     @Autowired
-    ProfileRepository profileRepository;
+    private ProfileRepository profileRepository;
 
     @Override
     public void run(String... args) throws Exception {
